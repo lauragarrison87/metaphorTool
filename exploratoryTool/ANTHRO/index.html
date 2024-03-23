@@ -18,10 +18,10 @@
     <div id="main">
         <header>Visual Conceptual Metaphor Explorer</header>
         <div id="buttons-wrapper">
-            <a href="\BIOMED" style="background-color: #019488">Biomedicine</a>
-            <a href="\CLIMATE" style="background-color: #3fccbf">Climate</a>
-            <a href="\SPACE" style="background-color: #7accc4">Space</a>
-            <a href="\ANTHRO" style="background-color: #a7c7c4">Anthropology</a>
+            <a href="/BIOMED" style="background-color: #019488">Biomedicine</a>
+            <a href="/CLIMATE" style="background-color: #3fccbf">Climate</a>
+            <a href="/SPACE" style="background-color: #7accc4">Space</a>
+            <a href="/ANTHRO" style="background-color: #a7c7c4">Anthropology</a>
         </div>
         
         <div id="columns">
@@ -205,14 +205,14 @@
                     .attr("x", -margin.top)
                     .attr("dy", ".75em")
                     .attr("transform", "rotate(-90)")
-                    .text("SIZE");
+                    .text("SPATIAL COVERAGE");
 
                 svg.append("text")
                     .attr("class", "x label")
                     .attr("text-anchor", "end")
                     .attr("x", width + margin.left + margin.right)
                     .attr("y", height + 55)
-                    .text("TIME (in years)");
+                    .text("TEMPORAL COVERAGE (years)");
 
                 // Add Y axis
                 const y = d3.scaleLinear()
