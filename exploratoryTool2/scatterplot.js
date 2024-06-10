@@ -255,21 +255,22 @@ async function drawScatterPlot(data, rectangles) {
     
     function onMouseEnter(e, datum) {
         tooltip.select("#values")
+            .style("font-size", "0.7em")
             .text(imgTitle(datum))
 
         
         //get the x and y coord of dot, offset by left and right margins
         const x = xScale(xAccessor(datum))
-        //+ dimensions.margin.left
+        + dimensions.margin.left + 10
         const y = yScale(yAccessor(datum))
-        //+ dimensions.margin.top
+        + dimensions.margin.top + 190
 
         // move tooltip to dot position, with % shift so is centered, not top-left positioned
         tooltip.style("transform", `translate(`
-        + `calc(${x}px),`
-        + `calc(${y}px)`
+        + `calc(0% + ${x}px),`
+        + `calc(0% + ${y}px)`
         + `)`)
-       
+
         tooltip.style("opacity", 1)   
 
         imgName.text(imgTitle(datum))
