@@ -7,8 +7,8 @@ async function drawScatterPlot(data, rectangles) {
     const rangeRectangles = await d3.csv(rectangles)
     //console.log(rangeRectangles[0])
 
-    const xAccessor = d => parseFloat(d.x)
-    const yAccessor = d => parseFloat(d.y)
+    const xAccessor = d => parseFloat(d.x) / 10
+    const yAccessor = d => parseFloat(d.y) / 10
     const imgTitle = d => d.name
     const imgAuthor = d => d.author
     const srcURL = d => d.url
@@ -58,12 +58,12 @@ async function drawScatterPlot(data, rectangles) {
 
     // 4. Create scales 
     const xScale = d3.scaleLinear()
-        .domain(d3.extent(dataset, xAccessor))
+        .domain([0, d3.extent(dataset, xAccessor)[1]])
         .range([0, dimensions.boundedWidth])
         //.nice()
     
     const yScale = d3.scaleLinear()
-        .domain(d3.extent(dataset, yAccessor)) // TODO don't hard-code max 
+    .domain([0, d3.extent(dataset, yAccessor)[1]]) 
         .range([dimensions.boundedHeight, 0])
         //.nice()
 
@@ -184,9 +184,8 @@ async function drawScatterPlot(data, rectangles) {
     // X AXIS
     const xAxisGenerator = d3.axisBottom()
         .scale(xScale)
-        // TODO this is currently hard-coded to BIOMED - struggling to get function domainTick() fed into here 
         .ticks(ticks[0].length)
-        //.tickFormat(d => ticks[0][d])
+        .tickFormat(d => ticks[0][d-1])
 
         // .tickValues([10, 20, 30, 40, 50, 60, 70, 80, 90])
         // .tickFormat((v) => {
@@ -217,7 +216,7 @@ async function drawScatterPlot(data, rectangles) {
     const yAxisGenerator = d3.axisLeft()
         .scale(yScale)
         .ticks(ticks[1].length)
-        //.tickFormat(d => ticks[1][d])
+        .tickFormat(d => ticks[1][d-1])
 
         // .tickValues([10, 20, 30, 40, 50, 60, 70, 80, 90])
         // .tickFormat((v) => {
