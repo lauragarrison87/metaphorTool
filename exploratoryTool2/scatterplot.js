@@ -82,11 +82,6 @@ async function drawScatterPlot(data, rectangles) {
     // 6. Draw peripherals
     // TODO use a switch statement instead somehow 
     function domainTick(whichDomain) {
-        // let xTick = []
-        // let xTickStr = []
-        // let yTick = []
-        // let yTickStr = []
-
         if (whichDomain == " Biomedicine") {
             //const yTick = [10, 20, 30, 40, 50, 60, 70, 80, 90]
             const yTickStr = [
@@ -187,20 +182,6 @@ async function drawScatterPlot(data, rectangles) {
         .ticks(ticks[0].length)
         .tickFormat(d => ticks[0][d-1])
 
-        // .tickValues([10, 20, 30, 40, 50, 60, 70, 80, 90])
-        // .tickFormat((v) => {
-        //     // you can completley override anything in this formatting
-        //     // for example
-        //     if (v <= 10) return 'nanosec';
-        //     if (v <= 20) return 'sec';
-        //     if (v <= 30) return 'min';
-        //     if (v <= 40) return 'hours';
-        //     if (v <= 50) return 'days';
-        //     if (v <= 60) return 'weeks';
-        //     if (v <= 70) return 'months';
-        //     if (v <= 80) return 'years';
-        // })
-
     const xAxis = scatterBounds.append("g")
         .call(xAxisGenerator)
         .style("transform", `translateY(${dimensions.boundedHeight}px)`)
@@ -217,22 +198,6 @@ async function drawScatterPlot(data, rectangles) {
         .scale(yScale)
         .ticks(ticks[1].length)
         .tickFormat(d => ticks[1][d-1])
-
-        // .tickValues([10, 20, 30, 40, 50, 60, 70, 80, 90])
-        // .tickFormat((v) => {
-        //     switch (v) {
-        //         case 10: return 'molecules';
-        //         case 20: return 'viruses';
-        //         case 30: return 'cells';
-        //         case 40: return 'bacteria';
-        //         case 50: return 'tissues';
-        //         case 60: return 'organs';
-        //         case 70: return 'organ systems';
-        //         case 80: return 'organism';
-        //         case 90: return 'population';
-                
-        //     }
-        // })
 
     const yAxis = scatterBounds.append("g")
         .call(yAxisGenerator)
@@ -293,13 +258,9 @@ async function drawScatterPlot(data, rectangles) {
         secondDomainAccessorTT.text(secondaryDomainAccessor(datum))
 
         imgPreview
-            // .text(imgURL(datum))
-            //.append("img")
             .attr("src", imgURL(datum))
             .attr("alt", "this is some alt text")
-            //.attr("class", "figure-img img-fluid rounded")
        
-
     }
 
     function onMouseLeave() {
