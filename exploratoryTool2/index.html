@@ -24,16 +24,16 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                   <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" href="#">Biomedicine</a>
+                      <a class="nav-link active" id="biomed" aria-current="page" href="#">Biomedicine</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="#">Climate</a>
+                      <a class="nav-link" id="climate" href="#">Climate</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Space</a>
+                        <a class="nav-link" id="space" href="#">Space</a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link" href="#">Anthropology</a>
+                    <a class="nav-link" id="anthro" href="#">Anthropology</a>
                     </li>
 
           </nav>
@@ -42,10 +42,12 @@
         <div class="row">
             <div class="col-lg-6">
                 <h4>Infographic Spatio-Temporal Distribution</h4>
-                <figure class="figure">
+                <!-- <figure class="figure">
                     <img src="placeholder.png" class="figure-img img-fluid rounded" alt="...">
-                    <figcaption class="figure-caption">A caption for the above image.</figcaption>
-                  </figure>
+                  </figure> -->
+                  <div class="col">
+                    <div id="scatterplot">
+                </div>
             </div>
 
             <!-- IMAGE FOCUS - RIGHT SIDE OF VIEWER -->
@@ -61,32 +63,91 @@
                     <div class="col">
                         <figure class="figure">
                             <img src="placeholder.png" class="figure-img img-fluid rounded" alt="...">
-                            <figcaption class="figure-caption">A caption for the above image.</figcaption>
                           </figure>
                     </div>
+                    <div class="col-lg-3">
+                        <p>Image name</p>
+                        <p>XYZ</p>
+                        
+                        <p>Image author</p>
+                        <p>XYZ</p>
+
+                        <p>Domain distribution</p>
+                        <p>XYZ</p>
+
+                        <p>Image Link</p>
+                        <p>XYZ</p>
+                    </div>
                 </div>
+
+                <div class="row">
+                    <div class="col">
+                        <h4>Conceptual metaphor analysis</h4>
+                    </div>
+                </div>
+
                 <div class="row">
                     <!-- CMT PIE CHART -->
                     <div class="col">
-                        <figure class="figure">
-                            <img src="placeholder.png" class="figure-img img-fluid rounded" alt="...">
-                            <figcaption class="figure-caption">A caption for the above image.</figcaption>
-                          </figure>
+                        <div id="piechart">
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        CMT PIE CHART DETAILS
+
+                    <div class="col-lg-6">
+                        <p>Supporting textual metaphor</p>
+                        <p>XYZ</p>
+                        
+                        <p>Type</p>
+                        <p>XYZ</p>
                     </div>
+                    
                 </div>
+            
             </div>
+
         </div>    
         </div>
     </div>
 
+    <script src="https://d3js.org/d3.v6.js"></script>
+    <script src="./scatterplot.js"></script>
+    <script src="./pie.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+
+    <script>
+      // GLOBALS - from original
+      let data = undefined;
+      let rectangles = undefined;
+      let chosenImg = '';
+      let piechartValues = undefined;
+      
+      // I only vaguely know what I'm doing with this clearVis() 
+      // from https://stackoverflow.com/questions/56128552/how-to-switch-csv-dataset-of-d3-js-graph-to-another-csv-by-clicking-on-button
+      function clearVis() {
+        var myNode = document.getElementById("scatterplot");
+        while (myNode.firstChild) {
+          myNode.removeChild(myNode.firstChild);
+        }
+      }
+
+      d3.select("#biomed").on("click", function(d, i) {
+          drawScatterPlot("./data/biomed/biomed.csv", "./data/biomed/biomed_rectangles.csv");
+        });
+
+        d3.select("#climate").on("click", function(d, i) {
+          drawScatterPlot("./data/climate/climate.csv", "./data/climate/climate_rectangles.csv");
+        });
+
+        d3.select("#space").on("click", function(d, i) {
+          drawScatterPlot("./data/space/space.csv", "./data/space/space_rectangles.csv");
+        });
+        d3.select("#anthro").on("click", function(d, i) {
+          drawScatterPlot("./data/anthro/anthro.csv", "./data/anthro/anthro_rectangles.csv");
+        });
+
+        </script>
+
 </body>
 </html>

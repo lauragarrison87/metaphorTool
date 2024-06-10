@@ -2,6 +2,46 @@ body {
     padding: 90px 30px 0px 30px; 
 }
 
+#img-container {
+    max-height: 70%;
+}
+
+#pie-container {
+    max-height: 30%;
+}
+
+#scatterplot {
+    width: 100%;
+    height: 100%;
+}
+
+#piechart {
+    width: 100%;
+    height: 100%;
+}
+
 .tips {
     font-weight: bold;
 }
+
+/* DOMAIN COLORS  */
+.biomed {
+    background-color: #019488;
+}
+
+.climate {
+    background-color: #3fccbf;
+}
+
+.space {
+    background-color: #7accc4
+}
+
+.anthro {
+    background-color: #a7c7c4
+}
+
+
+
+
+
