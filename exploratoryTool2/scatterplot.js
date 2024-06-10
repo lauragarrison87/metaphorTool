@@ -2,7 +2,7 @@ async function drawScatterPlot(data, rectangles) {
 
     // 1. Access data 
     const dataset= await d3.csv(data)
-    console.table(dataset[0])
+    //console.table(dataset[0])
 
     const rangeRectangles = await d3.csv(rectangles)
     //console.log(rangeRectangles[0])
@@ -11,16 +11,14 @@ async function drawScatterPlot(data, rectangles) {
     const yAccessor = d => parseFloat(d.y)
     const imgTitle = d => d.name
     const imgAuthor = d => d.author
-    const imgURL = d => d.url
+    const srcURL = d => d.url
+    const imgURL = d => d.imageURL
     const domainAccessor = d => d.primarydomain
     const secondaryDomainAccessor = d => d.secondarydomain
 
     let whichDomain = domainAccessor(dataset[0])
-
     // console.log(yAccessor(dataset[0]))
     // console.log(xAccessor(dataset[0]))
-    console.log(whichDomain)
-
 
     // 2. Set dimensions 
     const width = 500
@@ -62,12 +60,12 @@ async function drawScatterPlot(data, rectangles) {
     const xScale = d3.scaleLinear()
         .domain(d3.extent(dataset, xAccessor))
         .range([0, dimensions.boundedWidth])
-        .nice()
+        //.nice()
     
     const yScale = d3.scaleLinear()
         .domain(d3.extent(dataset, yAccessor)) // TODO don't hard-code max 
         .range([dimensions.boundedHeight, 0])
-        .nice()
+        //.nice()
 
 
     // 5. Draw data 
@@ -84,14 +82,14 @@ async function drawScatterPlot(data, rectangles) {
     // 6. Draw peripherals
     // TODO use a switch statement instead somehow 
     function domainTick(whichDomain) {
-        let xTick = []
-        let xTickStr = []
-        let yTick = []
-        let yTickStr = []
+        // let xTick = []
+        // let xTickStr = []
+        // let yTick = []
+        // let yTickStr = []
 
-        if (whichDomain == "Biomedicine") {
-            yTick = [10, 20, 30, 40, 50, 60, 70, 80, 90]
-            yTickStr = [
+        if (whichDomain == " Biomedicine") {
+            //const yTick = [10, 20, 30, 40, 50, 60, 70, 80, 90]
+            const yTickStr = [
                 'molecules',
                 'viruses',
                 'cells',
@@ -103,8 +101,8 @@ async function drawScatterPlot(data, rectangles) {
                 'population',
 
             ]
-            xTick = [10, 20, 30, 40, 50, 60, 70, 80, 90]
-            xTickStr = [
+            //const xTick = [10, 20, 30, 40, 50, 60, 70, 80, 90]
+            const xTickStr = [
                 "nanosec", 
                 "sec",
                 "min",
@@ -114,54 +112,55 @@ async function drawScatterPlot(data, rectangles) {
                 "month",
                 "year"
             ]
-            return [xTick, xTickStr, yTick, yTickStr]
+            return [xTickStr, yTickStr]
 
-        } else if (whichDomain == "Climate") {
-            yTick = [10, 20, 30]
-            yTickStr = [
+        } else if (whichDomain == " Climate") {
+            //const yTick = [10, 20, 30]
+            const yTickStr = [
                 "local",
                 "regional",
                 "global"
             ]
-            xTick = [10, 20, 30, 40, 50]
-            xTickStr = [
+            //const xTick = [10, 20, 30, 40, 50]
+            const xTickStr = [
                 "<1 year",
                 "decade",
                 "century",
-                "thousand"
+                "thousand",
+                "" //HANNA check this 
             ]
-            return [xTick, xTickStr, yTick, yTickStr]
+            return [xTickStr, yTickStr]
 
-        } else if (whichDomain == "Space") {
-            yTick = [10, 20, 30, 40, 50, 60]
-            yTickStr = [
-                'objects in space',
-                'planet',
-                'star',
-                'black holes',
-                'galaxy',
-                'universe',
+        } else if (whichDomain == " Space") {
+            //const yTick = [10, 20, 30, 40, 50, 60]
+            const yTickStr = [
+                "objects in space",
+                "planet",
+                "star",
+                "black holes",
+                "galaxy",
+                "universe",
             ]
-            xTick = [10, 20, 30, 40]
-            xTickStr = [
+            //const xTick = [10, 20, 30, 40]
+            const xTickStr = [
                 "<1 yr",
                 "decade",
                 "million",
                 "billion"
             ]
-            return [xTick, xTickStr, yTick, yTickStr]
+            return [xTickStr, yTickStr]
 
-        } else if (whichDomain == "Anthropology") {
-            yTick = [10, 20, 30, 40, 50]
-            yTickStr = [
+        } else if (whichDomain == " Anthropology") {
+            //const yTick = [10, 20, 30, 40, 50]
+            const yTickStr = [
                 "local",
                 "regional",
                 "continental",
                 "intercontinental",
                 "global"
             ]
-            xTick = [10, 20, 30, 40, 50, 60, 70, 80]
-            xTickStr = [
+            //const xTick = [10, 20, 30, 40, 50, 60, 70, 80]
+            const xTickStr = [
                 "<1 yr",
                 "decade",
                 "century",
@@ -171,31 +170,37 @@ async function drawScatterPlot(data, rectangles) {
                 "million",
                 "billion"
             ]
-            return [xTick, xTickStr, yTick, yTickStr]
+            return [xTickStr, yTickStr]
         }
 
     }
 
-    console.log(domainTick(whichDomain))
+    //console.log("Domain Ticks")
+    console.log(domainTick(whichDomain)[1])
+
+    let ticks = domainTick(whichDomain)
 
 
     // X AXIS
     const xAxisGenerator = d3.axisBottom()
         .scale(xScale)
         // TODO this is currently hard-coded to BIOMED - struggling to get function domainTick() fed into here 
-        .tickValues([10, 20, 30, 40, 50, 60, 70, 80, 90])
-        .tickFormat((v) => {
-            // you can completley override anything in this formatting
-            // for example
-            if (v <= 10) return 'nanosec';
-            if (v <= 20) return 'sec';
-            if (v <= 30) return 'min';
-            if (v <= 40) return 'hours';
-            if (v <= 50) return 'days';
-            if (v <= 60) return 'weeks';
-            if (v <= 70) return 'months';
-            if (v <= 80) return 'years';
-        })
+        .ticks(ticks[0].length)
+        //.tickFormat(d => ticks[0][d])
+
+        // .tickValues([10, 20, 30, 40, 50, 60, 70, 80, 90])
+        // .tickFormat((v) => {
+        //     // you can completley override anything in this formatting
+        //     // for example
+        //     if (v <= 10) return 'nanosec';
+        //     if (v <= 20) return 'sec';
+        //     if (v <= 30) return 'min';
+        //     if (v <= 40) return 'hours';
+        //     if (v <= 50) return 'days';
+        //     if (v <= 60) return 'weeks';
+        //     if (v <= 70) return 'months';
+        //     if (v <= 80) return 'years';
+        // })
 
     const xAxis = scatterBounds.append("g")
         .call(xAxisGenerator)
@@ -211,21 +216,24 @@ async function drawScatterPlot(data, rectangles) {
     // Y AXIS 
     const yAxisGenerator = d3.axisLeft()
         .scale(yScale)
-        .tickValues([10, 20, 30, 40, 50, 60, 70, 80, 90])
-        .tickFormat((v) => {
-            switch (v) {
-                case 10: return 'molecules';
-                case 20: return 'viruses';
-                case 30: return 'cells';
-                case 40: return 'bacteria';
-                case 50: return 'tissues';
-                case 60: return 'organs';
-                case 70: return 'organ systems';
-                case 80: return 'organism';
-                case 90: return 'population';
+        .ticks(ticks[1].length)
+        //.tickFormat(d => ticks[1][d])
+
+        // .tickValues([10, 20, 30, 40, 50, 60, 70, 80, 90])
+        // .tickFormat((v) => {
+        //     switch (v) {
+        //         case 10: return 'molecules';
+        //         case 20: return 'viruses';
+        //         case 30: return 'cells';
+        //         case 40: return 'bacteria';
+        //         case 50: return 'tissues';
+        //         case 60: return 'organs';
+        //         case 70: return 'organ systems';
+        //         case 80: return 'organism';
+        //         case 90: return 'population';
                 
-            }
-        })
+        //     }
+        // })
 
     const yAxis = scatterBounds.append("g")
         .call(yAxisGenerator)
@@ -251,7 +259,12 @@ async function drawScatterPlot(data, rectangles) {
         .on("mouseleave", onMouseLeave)
 
     const tooltip = d3.select("#tooltip")
-    const imgName = d3.select("#name-title")
+    const imgTitleTT = d3.select("#name-title")
+    const imgAuthorTT = d3.select("#author-title")
+    const srcURLTT = d3.select("#link-title")
+    const domainAccessorTT = d3.select("#primary-domain-title")
+    const secondDomainAccessorTT = d3.select("#secondary-domain-title")
+    const imgPreview = d3.select("#preview-img")
     
     function onMouseEnter(e, datum) {
         tooltip.select("#values")
@@ -267,13 +280,27 @@ async function drawScatterPlot(data, rectangles) {
 
         // move tooltip to dot position, with % shift so is centered, not top-left positioned
         tooltip.style("transform", `translate(`
-        + `calc(0% + ${x}px),`
-        + `calc(0% + ${y}px)`
+        + `calc(${x}px),`
+        + `calc(${y}px)`
         + `)`)
 
-        tooltip.style("opacity", 1)   
+        tooltip.style("opacity", 1)
+          
+        // Other image metadata to populate based on mouseHover:
+        imgTitleTT.text(imgTitle(datum))
+        imgAuthorTT.text(imgAuthor(datum))
+        srcURLTT.text(srcURL(datum))
+        domainAccessorTT.text(domainAccessor(datum))
+        secondDomainAccessorTT.text(secondaryDomainAccessor(datum))
 
-        imgName.text(imgTitle(datum))
+        imgPreview
+            // .text(imgURL(datum))
+            //.append("img")
+            .attr("src", imgURL(datum))
+            .attr("alt", "this is some alt text")
+            //.attr("class", "figure-img img-fluid rounded")
+       
+
     }
 
     function onMouseLeave() {

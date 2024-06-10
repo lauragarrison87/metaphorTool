@@ -2,6 +2,12 @@ body {
     padding: 90px 30px 0px 30px; 
 }
 
+circle:hover {
+    fill: #019488;
+    stroke: #019488;
+    stroke-width: 4px;
+}
+
 #img-container {
     max-height: 70%;
 }
@@ -13,14 +19,14 @@ body {
 #scatterplot svg {
     width: 100%;
     height: 100%;
-    overflow: visible;
+    /* overflow: visible; */
     /* position: relative; */
 }
 
 #piechart svg {
     width: 100%;
     height: 100%;
-    overflow: visible;
+    /* overflow: visible; */
 }
 
 .tips {
