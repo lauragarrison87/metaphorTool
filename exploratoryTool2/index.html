@@ -42,11 +42,10 @@
         <div class="row">
             <div class="col-lg-6">
                 <h4>Infographic Spatio-Temporal Distribution</h4>
-                <!-- <figure class="figure">
-                    <img src="placeholder.png" class="figure-img img-fluid rounded" alt="...">
-                  </figure> -->
-                  <div class="col">
-                    <div id="scatterplot">
+                <div id="scatterplot">
+                  <div id="tooltip" class="tooltip">
+                    Title: <span id="values"></span>
+                </div>
                 </div>
             </div>
 
@@ -66,46 +65,38 @@
                           </figure>
                     </div>
                     <div class="col-lg-3">
-                        <p>Image name</p>
-                        <p>XYZ</p>
+                        <p class="emph">Image name</p>
+                        <p id="name-title"></p>
                         
-                        <p>Image author</p>
-                        <p>XYZ</p>
+                        <p class="emph">Image author</p>
+                        <p id="author-title"></p>
 
-                        <p>Domain distribution</p>
-                        <p>XYZ</p>
+                        <p class="emph">Domain distribution</p>
+                        <p id="primary-domain-title">, 
+                        <span id="secondary-domain-title"></span>
+                        </p>
 
-                        <p>Image Link</p>
-                        <p>XYZ</p>
+                        <p class="emph">Image Link</p>
+                        <p id="link-title"></p>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col">
                         <h4>Conceptual metaphor analysis</h4>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <!-- CMT PIE CHART -->
-                    <div class="col">
-                        <div id="piechart">
+                        <div id="piechart"></div>
                     </div>
 
-                    <div class="col-lg-6">
-                        <p>Supporting textual metaphor</p>
+                    <div class="col-lg-3">
+                        <p class="emph">Supporting textual metaphor</p>
                         <p>XYZ</p>
                         
-                        <p>Type</p>
+                        <p class="emph">Type</p>
                         <p>XYZ</p>
-                    </div>
-                    
                 </div>
             
             </div>
-
         </div>    
-        </div>
     </div>
 
     <script src="https://d3js.org/d3.v6.js"></script>
@@ -118,16 +109,16 @@
 
     <script>
       // GLOBALS - from original
-      let data = undefined;
-      let rectangles = undefined;
-      let chosenImg = '';
-      let piechartValues = undefined;
+      // let data = undefined;
+      // let rectangles = undefined;
+      // let chosenImg = '';
+      // let piechartValues = undefined;
       
       // clearVis() adapted from https://stackoverflow.com/questions/56128552/how-to-switch-csv-dataset-of-d3-js-graph-to-another-csv-by-clicking-on-button
       function clearVis() {
-        var myNode = document.getElementById("scatterplot");
-        while (myNode.firstChild) {
-          myNode.removeChild(myNode.firstChild);
+        var scatterNode = document.getElementById("scatterplot");
+        while (scatterNode.firstChild) {
+          scatterNode.removeChild(scatterNode.firstChild);
         }
       }
 
@@ -138,6 +129,7 @@
       d3.select("#biomed").on("click", function(d, i) {
           clearVis();
           drawScatterPlot("./data/biomed/biomed.csv", "./data/biomed/biomed_rectangles.csv");
+          drawPieChart("./data/biomed/biomed.csv");
         });
 
         d3.select("#climate").on("click", function(d, i) {

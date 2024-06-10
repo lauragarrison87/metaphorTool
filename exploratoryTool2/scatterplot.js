@@ -2,14 +2,18 @@ async function drawScatterPlot(data, rectangles) {
 
     // 1. Access data 
     const dataset= await d3.csv(data)
-    //console.table(dataset[0])
+    console.table(dataset[0])
 
     const rangeRectangles = await d3.csv(rectangles)
     //console.log(rangeRectangles[0])
 
     const xAccessor = d => parseFloat(d.x)
     const yAccessor = d => parseFloat(d.y)
+    const imgTitle = d => d.name
+    const imgAuthor = d => d.author
+    const imgURL = d => d.url
     const domainAccessor = d => d.primarydomain
+    const secondaryDomainAccessor = d => d.secondarydomain
 
     let whichDomain = domainAccessor(dataset[0])
 
@@ -73,10 +77,12 @@ async function drawScatterPlot(data, rectangles) {
         .join("circle")
         .attr("cx", d => xScale(xAccessor(d)))
         .attr("cy", d => yScale(yAccessor(d)))
-        .attr("r", 5)
+        .attr("r", 8)
+        .attr('class', 'circle-base')
 
 
     // 6. Draw peripherals
+    // TODO use a switch statement instead somehow 
     function domainTick(whichDomain) {
         let xTick = []
         let xTickStr = []
@@ -236,8 +242,42 @@ async function drawScatterPlot(data, rectangles) {
 
 
     // 7. Interactions
+    scatterBounds.selectAll("circle").on("mouseenter", function(e, d){
+        console.log(e.target)
+    })
+
+    scatterBounds.selectAll("circle")
+        .on("mouseenter", onMouseEnter)
+        .on("mouseleave", onMouseLeave)
+
+    const tooltip = d3.select("#tooltip")
+    const imgName = d3.select("#name-title")
+    
+    function onMouseEnter(e, datum) {
+        tooltip.select("#values")
+            .text(imgTitle(datum))
+
+        
+        //get the x and y coord of dot, offset by left and right margins
+        const x = xScale(xAccessor(datum))
+        //+ dimensions.margin.left
+        const y = yScale(yAccessor(datum))
+        //+ dimensions.margin.top
+
+        // move tooltip to dot position, with % shift so is centered, not top-left positioned
+        tooltip.style("transform", `translate(`
+        + `calc(${x}px),`
+        + `calc(${y}px)`
+        + `)`)
+       
+        tooltip.style("opacity", 1)   
+
+        imgName.text(imgTitle(datum))
+    }
+
+    function onMouseLeave() {
+        tooltip.style("opacity", 0)
+
+    }
 
 }
-
-
-drawScatterPlot(data, rectanges)
