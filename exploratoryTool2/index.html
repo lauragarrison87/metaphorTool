@@ -123,8 +123,7 @@
       let chosenImg = '';
       let piechartValues = undefined;
       
-      // I only vaguely know what I'm doing with this clearVis() 
-      // from https://stackoverflow.com/questions/56128552/how-to-switch-csv-dataset-of-d3-js-graph-to-another-csv-by-clicking-on-button
+      // clearVis() adapted from https://stackoverflow.com/questions/56128552/how-to-switch-csv-dataset-of-d3-js-graph-to-another-csv-by-clicking-on-button
       function clearVis() {
         var myNode = document.getElementById("scatterplot");
         while (myNode.firstChild) {
@@ -132,18 +131,26 @@
         }
       }
 
+      // initialized view 
+      drawScatterPlot("./data/biomed/biomed.csv", "./data/biomed/biomed_rectangles.csv");
+
+      // view selection updates 
       d3.select("#biomed").on("click", function(d, i) {
+          clearVis();
           drawScatterPlot("./data/biomed/biomed.csv", "./data/biomed/biomed_rectangles.csv");
         });
 
         d3.select("#climate").on("click", function(d, i) {
+          clearVis();
           drawScatterPlot("./data/climate/climate.csv", "./data/climate/climate_rectangles.csv");
         });
 
         d3.select("#space").on("click", function(d, i) {
+          clearVis();
           drawScatterPlot("./data/space/space.csv", "./data/space/space_rectangles.csv");
         });
         d3.select("#anthro").on("click", function(d, i) {
+          clearVis();
           drawScatterPlot("./data/anthro/anthro.csv", "./data/anthro/anthro_rectangles.csv");
         });
 
