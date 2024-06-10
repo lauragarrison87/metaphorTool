@@ -4,9 +4,6 @@ async function drawScatterPlot(data, rectangles) {
     const dataset= await d3.csv(data)
     //console.table(dataset[0])
 
-    const rangeRectangles = await d3.csv(rectangles)
-    //console.log(rangeRectangles[0])
-
     const xAccessor = d => parseFloat(d.x) / 10
     const yAccessor = d => parseFloat(d.y) / 10
     const imgTitle = d => d.name
@@ -19,6 +16,19 @@ async function drawScatterPlot(data, rectangles) {
     let whichDomain = domainAccessor(dataset[0])
     // console.log(yAccessor(dataset[0]))
     // console.log(xAccessor(dataset[0]))
+
+    const rangeRectangles = await d3.csv(rectangles)
+    //console.log(rangeRectangles[0])
+    //xfrom,yfrom,xto,yto,color
+
+    console.log(rangeRectangles.length)
+
+    const x1RectAccessor = d => parseFloat(d.xfrom) / 10
+    const x2RectAccessor = d => parseFloat(d.xto) / 10
+    const y1RectAccessor = d => parseFloat(d.yfrom) / 10
+    const y2RectAccessor = d => parseFloat(d.yto) / 10
+
+
 
     // 2. Set dimensions 
     const width = 500
@@ -69,6 +79,20 @@ async function drawScatterPlot(data, rectangles) {
 
 
     // 5. Draw data 
+    const sqs = scatterBounds.selectAll("rect").data(rangeRectangles)
+
+    console.log("Can I do math")
+    console.log(x2RectAccessor(rangeRectangles[0])-x1RectAccessor(rangeRectangles[0]))
+
+    sqs
+        .join("rect")
+        .attr("x", d => xScale(x1RectAccessor(d)))
+        .attr("y", d => yScale(y2RectAccessor(d)))
+        .attr("width", d => xScale(x2RectAccessor(d))-xScale(x1RectAccessor(d)))
+        .attr("height", d => yScale(y1RectAccessor(d))-yScale(y2RectAccessor(d)))
+        .attr("rx", 15)
+        .attr("fill-opacity", 0.3)
+
     const dots = scatterBounds.selectAll("circle").data(dataset)
 
     dots
