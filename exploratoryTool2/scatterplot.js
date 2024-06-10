@@ -58,12 +58,12 @@ async function drawScatterPlot(data, rectangles) {
 
     // 4. Create scales 
     const xScale = d3.scaleLinear()
-        .domain([0, d3.extent(dataset, xAccessor)[1]])
+        .domain([d3.extent(dataset, xAccessor)[0]-0.5, d3.extent(dataset, xAccessor)[1]+0.5])
         .range([0, dimensions.boundedWidth])
         //.nice()
     
     const yScale = d3.scaleLinear()
-    .domain([0, d3.extent(dataset, yAccessor)[1]]) 
+        .domain([d3.extent(dataset, xAccessor)[0]-0.5, d3.extent(dataset, yAccessor)[1]+0.5]) 
         .range([dimensions.boundedHeight, 0])
         //.nice()
 
