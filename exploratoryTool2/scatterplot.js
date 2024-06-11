@@ -79,16 +79,16 @@ async function drawScatterPlot(data, rectangles) {
 
 
     // 5. Draw data 
-    const sqs = scatterBounds.selectAll("rect").data(rangeRectangles)
+    // const sqs = scatterBounds.selectAll("rect").data(rangeRectangles)
 
-    sqs
-        .join("rect")
-        .attr("x", d => xScale(x1RectAccessor(d)))
-        .attr("y", d => yScale(y2RectAccessor(d)))
-        .attr("width", d => xScale(x2RectAccessor(d))-xScale(x1RectAccessor(d)))
-        .attr("height", d => yScale(y1RectAccessor(d))-yScale(y2RectAccessor(d)))
-        .attr("rx", 15)
-        .attr("fill-opacity", 0.3)
+    // sqs
+    //     .join("rect")
+    //     .attr("x", d => xScale(x1RectAccessor(d)))
+    //     .attr("y", d => yScale(y2RectAccessor(d)))
+    //     .attr("width", d => xScale(x2RectAccessor(d))-xScale(x1RectAccessor(d)))
+    //     .attr("height", d => yScale(y1RectAccessor(d))-yScale(y2RectAccessor(d)))
+    //     .attr("rx", 15)
+    //     .attr("fill-opacity", 0.3)
 
     const dots = scatterBounds.selectAll("circle").data(dataset)
 
@@ -97,6 +97,7 @@ async function drawScatterPlot(data, rectangles) {
         .attr("cx", d => xScale(xAccessor(d)))
         .attr("cy", d => yScale(yAccessor(d)))
         .attr("fill", "rgb(1, 148, 136)")
+        .attr("opacity", 0.5)
         .attr("r", 8)
         .attr('class', 'circle-base')
 
@@ -108,16 +109,18 @@ async function drawScatterPlot(data, rectangles) {
             console.log(this) //check access to DOM object
             d3.select(this)
                 .transition().ease(d3.easeLinear)
-                .duration(500)
+                .duration(400)
                 .attr("fill", "#5afaed") 
+                .attr("opacity", 1)
                 .attr("r", 15)
 
         })
         .on("mouseout", function(d){
             d3.select(this)
             .transition().ease(d3.easeLinear)
-            .duration(500)
-            .attr("fill", "grey")
+            .duration(400)
+            .attr("fill", "rgb(1, 148, 136)")
+            .attr("opacity", 0.5)
             .attr("r", 8)
         })
 
