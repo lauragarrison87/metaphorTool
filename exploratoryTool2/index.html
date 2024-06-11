@@ -40,70 +40,55 @@
 
         <!-- SCATTERPLOT CONTEXT -->
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-5">
                 <h4>Infographic Spatio-Temporal Distribution</h4>
                   <div id="scatterplot">
-                  <div id="tooltip" class="tooltip">
-                    <span id="values"></span>
+                    <div id="tooltip" class="tooltip">
+                      <span id="values"></span>
+                    </div>
                   </div>
-                </div>
-            </div>
+              </div>
 
             <!-- IMAGE FOCUS - RIGHT SIDE OF VIEWER -->
-            <div class="col-lg-6">
-                <div class="row">
-                    <div class="col">
-                        <h4>Image Details</h4>
-                    </div>
-                </div>
+            <div class="col-lg-5">
+                <h4>Image Details</h4>
+                <p>
+                  <span class="emph">Image name:</span>
+                  <span id="name-title"></span>
+                </p>
 
-                <div class="row">
-                    <!-- TODO fix jumping height -->
-                    <div class="col" style="max-height: 300px;">
-                        <figure class="figure">
-                            <img  id="preview-img" src="images/placeholder.png" class="figure-img img-fluid rounded">
-                        </figure>
-                    </div>
-                    <div class="col-lg-3">
-                        <p>
-                          <span class="emph">Image name</span><br>
-                          <span id="name-title"></span>
-                        </p>
+                <p>
+                  <span class="emph">Image author:</span>
+                  <span id="author-title"></span>
+                </p>
 
-                        <p>
-                          <span class="emph">Image author</span><br>
-                          <span id="author-title"></span>
-                        </p>
+                <p>
+                  <span class="emph">Domain distribution:</span>
+                  <span id="primary-domain-title"></span>, 
+                  <span id="secondary-domain-title"></span>
+                </p>
 
-                        <p>
-                          <span class="emph">Domain distribution</span><br>
-                          <span id="primary-domain-title"></span>, 
-                          <span id="secondary-domain-title"></span>
-                        </p>
+                <figure class="figure">
+                    <img  id="preview-img" src="images/placeholder.png" class="figure-img img-fluid rounded">
+                </figure>
 
-                        <p>
-                          <span class="emph">Image link</span><br>
-                          <span id="link-title"></span>
-                        </p>
+                <p>
+                  <span class="emph">Image link</span><br>
+                  <span id="link-title"></span>
+                </p>
+              </div>
 
-                    </div>
-                </div>
+              <div class="col-lg-2">
+                  <h4>Conceptual metaphor analysis</h4>
 
-                <div class="row">
-                    <div class="col">
-                        <h4>Conceptual metaphor analysis</h4>
-                        <div id="piechart"></div>
-                    </div>
+                  <div id="piechart"></div>
 
-                    <div class="col-lg-3">
-                        <p class="emph">Supporting textual metaphor</p>
-                        <p>XYZ</p>
-                        
-                        <p class="emph">Type</p>
-                        <p>XYZ</p>
-                </div>
-            
-            </div>
+                  <p class="emph">Supporting textual metaphor</p>
+                  <p>XYZ</p>
+                  
+                  <p class="emph">Type</p>
+                  <p>XYZ</p>
+              </div>
         </div>    
     </div>
 
