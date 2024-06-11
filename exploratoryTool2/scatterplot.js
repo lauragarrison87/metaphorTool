@@ -81,9 +81,6 @@ async function drawScatterPlot(data, rectangles) {
     // 5. Draw data 
     const sqs = scatterBounds.selectAll("rect").data(rangeRectangles)
 
-    console.log("Can I do math")
-    console.log(x2RectAccessor(rangeRectangles[0])-x1RectAccessor(rangeRectangles[0]))
-
     sqs
         .join("rect")
         .attr("x", d => xScale(x1RectAccessor(d)))
@@ -99,8 +96,30 @@ async function drawScatterPlot(data, rectangles) {
         .join("circle")
         .attr("cx", d => xScale(xAccessor(d)))
         .attr("cy", d => yScale(yAccessor(d)))
+        .attr("fill", "rgb(1, 148, 136)")
         .attr("r", 8)
         .attr('class', 'circle-base')
+
+    // PLAYING: add event listener to each circle per https://observablehq.com/@hydrosquall/d3-tutorial-interactivity-animated-transitions
+    scatterBounds.selectAll("circle")
+        //.attr("fill", "grey")
+        .on("mouseover", function(d){
+            console.log(d) //check that am accessing data object
+            console.log(this) //check access to DOM object
+            d3.select(this)
+                .transition().ease(d3.easeLinear)
+                .duration(500)
+                .attr("fill", "#5afaed") 
+                .attr("r", 15)
+
+        })
+        .on("mouseout", function(d){
+            d3.select(this)
+            .transition().ease(d3.easeLinear)
+            .duration(500)
+            .attr("fill", "grey")
+            .attr("r", 8)
+        })
 
 
     // 6. Draw peripherals
