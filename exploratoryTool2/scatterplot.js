@@ -1,26 +1,115 @@
-async function drawScatterPlot(data_csv) {
+// 2. Set dimensions 
+const width = 500
+let dimensions = {
+    width: width,
+    height: width,
+    margin: {
+        top: 10, 
+        right: 10,
+        bottom: 80,
+        left: 100,
+    },
+}
 
-    // 2. Set dimensions 
-    const width = 500
-    let dimensions = {
-        width: width,
-        height: width,
-        margin: {
-            top: 10, 
-            right: 10,
-            bottom: 80,
-            left: 100,
-        },
+dimensions.boundedWidth = dimensions.width
+    - dimensions.margin.left
+    - dimensions.margin.right
+
+dimensions.boundedHeight = dimensions.height
+    - dimensions.margin.top
+    - dimensions.margin.bottom
+    
+
+function domainTick(whichDomain) {
+    if (whichDomain == " Biomedicine") {
+        //const yTick = [10, 20, 30, 40, 50, 60, 70, 80, 90]
+        const yTickStr = [
+            'molecules',
+            'viruses',
+            'cells',
+            'bacteria',
+            'tissues',
+            'organs',
+            'organ systems',
+            'organism',
+            'population',
+
+        ]
+        //const xTick = [10, 20, 30, 40, 50, 60, 70, 80, 90]
+        const xTickStr = [
+            "nanosec", 
+            "sec",
+            "min",
+            "hour",
+            "day",
+            "week",
+            "month",
+            "year"
+        ]
+        return [xTickStr, yTickStr]
+
+    } else if (whichDomain == " Climate") {
+        //const yTick = [10, 20, 30]
+        const yTickStr = [
+            "local",
+            "regional",
+            "global"
+        ]
+        //const xTick = [10, 20, 30, 40, 50]
+        const xTickStr = [
+            "<1 year",
+            "decade",
+            "century",
+            "thousand",
+            "" //HANNA check this 
+        ]
+        return [xTickStr, yTickStr]
+
+    } else if (whichDomain == " Space") {
+        //const yTick = [10, 20, 30, 40, 50, 60]
+        const yTickStr = [
+            "objects in space",
+            "planet",
+            "star",
+            "black holes",
+            "galaxy",
+            "universe",
+        ]
+        //const xTick = [10, 20, 30, 40]
+        const xTickStr = [
+            "<1 yr",
+            "decade",
+            "million",
+            "billion"
+        ]
+        return [xTickStr, yTickStr]
+
+    } else if (whichDomain == " Anthropology") {
+        //const yTick = [10, 20, 30, 40, 50]
+        const yTickStr = [
+            "local",
+            "regional",
+            "continental",
+            "intercontinental",
+            "global"
+        ]
+        //const xTick = [10, 20, 30, 40, 50, 60, 70, 80]
+        const xTickStr = [
+            "<1 yr",
+            "decade",
+            "century",
+            "quincent.",
+            "thousand",
+            "centamill.",
+            "million",
+            "billion"
+        ]
+        return [xTickStr, yTickStr]
     }
 
-    dimensions.boundedWidth = dimensions.width
-        - dimensions.margin.left
-        - dimensions.margin.right
+}
 
-    dimensions.boundedHeight = dimensions.height
-        - dimensions.margin.top
-        - dimensions.margin.bottom
-
+async function drawScatterPlot(dataCSV) {
 
     // 3. Draw canvas 
     const scatterWrapper = d3.select("#scatterplot")
@@ -29,6 +118,7 @@ async function drawScatterPlot(data_csv) {
         .attr("height", dimensions.height)
     
     const scatterBounds = scatterWrapper.append("g")
+        .attr("id", "scatter-bounds")
         .style("transform", `translate(${
             dimensions.margin.left
         }px, ${
@@ -46,99 +136,8 @@ async function drawScatterPlot(data_csv) {
         //.nice()
 
 
-
-    // 6. Draw peripherals
-    function domainTick(whichDomain) {
-        if (whichDomain == " Biomedicine") {
-            //const yTick = [10, 20, 30, 40, 50, 60, 70, 80, 90]
-            const yTickStr = [
-                'molecules',
-                'viruses',
-                'cells',
-                'bacteria',
-                'tissues',
-                'organs',
-                'organ systems',
-                'organism',
-                'population',
-
-            ]
-            //const xTick = [10, 20, 30, 40, 50, 60, 70, 80, 90]
-            const xTickStr = [
-                "nanosec", 
-                "sec",
-                "min",
-                "hour",
-                "day",
-                "week",
-                "month",
-                "year"
-            ]
-            return [xTickStr, yTickStr]
-
-        } else if (whichDomain == " Climate") {
-            //const yTick = [10, 20, 30]
-            const yTickStr = [
-                "local",
-                "regional",
-                "global"
-            ]
-            //const xTick = [10, 20, 30, 40, 50]
-            const xTickStr = [
-                "<1 year",
-                "decade",
-                "century",
-                "thousand",
-                "" //HANNA check this 
-            ]
-            return [xTickStr, yTickStr]
-
-        } else if (whichDomain == " Space") {
-            //const yTick = [10, 20, 30, 40, 50, 60]
-            const yTickStr = [
-                "objects in space",
-                "planet",
-                "star",
-                "black holes",
-                "galaxy",
-                "universe",
-            ]
-            //const xTick = [10, 20, 30, 40]
-            const xTickStr = [
-                "<1 yr",
-                "decade",
-                "million",
-                "billion"
-            ]
-            return [xTickStr, yTickStr]
-
-        } else if (whichDomain == " Anthropology") {
-            //const yTick = [10, 20, 30, 40, 50]
-            const yTickStr = [
-                "local",
-                "regional",
-                "continental",
-                "intercontinental",
-                "global"
-            ]
-            //const xTick = [10, 20, 30, 40, 50, 60, 70, 80]
-            const xTickStr = [
-                "<1 yr",
-                "decade",
-                "century",
-                "quincent.",
-                "thousand",
-                "centamill.",
-                "million",
-                "billion"
-            ]
-            return [xTickStr, yTickStr]
-        }
-
-    }
-
     // 1. Access data 
-    const dataset= await d3.csv(data_csv)
+    const dataset= await d3.csv(dataCSV)
     console.table(dataset[0])
 
     const xAccessor = d => parseFloat(d.x) / 10
@@ -166,6 +165,8 @@ async function drawScatterPlot(data_csv) {
 
 
     function updateData(d){
+        //scatterBounds.exit().remove()
+        
         let ticks = domainTick(whichDomain)
 
         // X AXIS
@@ -329,5 +330,25 @@ async function drawScatterPlot(data_csv) {
     }
 
     updateData(dataset)
+}
+
+
+async function updateScatterPlot() {
+
+    const scatterBounds = d3.select("#scatter-bounds")
+
+    scatterBounds.selectAll("circle")
+        //.attr("fill", "grey")
+        .on("mouseover", function(d){
+            console.log(d) //check that am accessing data object
+            console.log(this) //check access to DOM object
+            d3.select(this)
+                .transition().ease(d3.easeLinear)
+                .duration(400)
+                .attr("fill", "yellowgreen") 
+                .attr("opacity", 1)
+                .attr("r", 40)
+
+        })
 }
 
