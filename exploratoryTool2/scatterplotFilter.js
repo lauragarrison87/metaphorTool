@@ -35,8 +35,8 @@ const yAxisGenerator = d3.axisLeft()
     .scale(yScale)
 
 
-const xAccessor = d => parseFloat(d.xfrom)
-const yAccessor = d => parseFloat(d.yfrom)
+const xAccessor = d => parseFloat(d.xfrom) + 0.5 * Math.random() //hack to spread points a wee bit 
+const yAccessor = d => parseFloat(d.yfrom) + 0.5 * Math.random() //hack to spread points a wee bit that overlap exactly
 const imgTitle = d => d.name
 const imgAuthor = d => d.author
 const srcURL = d => d.url
@@ -51,6 +51,21 @@ const srcURLTT = d3.select("#link-title")
 const domainAccessorTT = d3.select("#primary-domain-title")
 const secondDomainAccessorTT = d3.select("#secondary-domain-title")
 const imgPreview = d3.select("#preview-img")
+
+// CMT rationale variables
+const structuralAccessor = d => d.structural_details
+const ontologicalAccessor = d => d.ontological_details
+const orientationalAccessor = d => d.orientational_details
+const imagisticAccessor = d => d.imagistic_details
+const textGraphicMetaphorAcc = d => d.text_support_graphical_metaphors
+const textGraphicMetaphorDetailsAcc = d => d.text_support_graphical_metaphor_details
+
+const structTT = d3.select("#structural-details")
+const ontoTT =  d3.select("#ontological-details")
+const orientTT = d3.select("#orientational-details")
+const imagTT = d3.select("#imagistic-details")
+const textMetTT = d3.select("#text-support-graphical-metaphors")
+const textMetTypeTT = d3.select("#text-support-graphical-metaphors-details")
 
 
 function domainTick(whichDomain) {
@@ -161,6 +176,14 @@ function onMouseEnter(e, datum) {
     + `)`)
 
     tooltip.style("opacity", 1)
+
+    //CMT rationale
+    structTT.text(structuralAccessor(datum))
+    ontoTT.text(ontologicalAccessor(datum))
+    orientTT.text(orientationalAccessor(datum))
+    imagTT.text(imagisticAccessor(datum))
+    textMetTT.text(textGraphicMetaphorAcc(datum))
+    textMetTypeTT.text(textGraphicMetaphorDetailsAcc(datum))
 
     // Other image metadata to populate based on mouseHover:
     imgTitleTT.text(imgTitle(datum))

@@ -83,17 +83,40 @@
 
                   <div id="piechart"></div>
 
-                  <p class="emph">Supporting textual metaphor</p>
-                  <p>XYZ</p>
-                  
-                  <p class="emph">Type</p>
-                  <p>XYZ</p>
+                  <p>
+                    <span class="emph">Structural:</span>
+                    <span id="structural-details"></span>
+                  </p>
+
+                  <p>
+                    <span class="emph">Ontological:</span>
+                    <span id="ontological-details"></span>
+                  </p>
+
+                  <p>
+                    <span class="emph">Orientational:</span>
+                    <span id="orientational-details"></span>
+                  </p>
+
+                  <p>
+                    <span class="emph">Imagistic:</span>
+                    <span id="imagistic-details"></span>
+                  </p>
+
+                  <p>
+                    <span class="emph">Supporting textual metaphor:</span>
+                    <span id="text-support-graphical-metaphors"></span>
+                  </p>
+
+                  <p>
+                    <span class="emph">Type:</span>
+                    <span id="text-support-graphical-metaphors-details"></span>
+                  </p>
               </div>
         </div>    
     </div>
 
     <script src="https://d3js.org/d3.v6.js"></script>
-    <!-- <script src="./scatterplot.js"></script> -->
     <script src="./scatterplotFilter.js"></script>
     <script src="./pie.js"></script>
 
@@ -104,6 +127,7 @@
     <script>
       async function dataSlice(dataCSV){
         const dataset= await d3.csv(dataCSV)
+        console.table(dataset[0])
 
         const biomedData = dataset.filter(d => {
               if (d.primary_domain == "Biomedicine"){
