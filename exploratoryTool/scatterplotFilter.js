@@ -6,8 +6,8 @@ let dimensions = {
     width: width,
     height: width,
     margin: {
-        top: 10, 
-        right: 10,
+        top: 20, 
+        right: 20,
         bottom: 80,
         left: 100,
     },
@@ -158,24 +158,33 @@ function domainTick(whichDomain) {
 }
 
 function onMouseEnter(e, datum) {
-    tooltip.select("#values")
-        .style("font-size", "0.7em")
-        .text(imgTitle(datum))
+    // tooltip.select("#values")
+    //     .style("font-size", "0.7em")
+    //     .text(imgTitle(datum))
+
+    // //get the x and y coord of dot, offset by left and right margins
+    // const x = xScale(xAccessor(datum))
+    // + dimensions.margin.left + 10
+    // const y = yScale(yAccessor(datum))
+    // + dimensions.margin.top + 190
+
+    // // move tooltip to dot position, with % shift so is centered, not top-left positioned
+    // tooltip.style("transform", `translate(`
+    // + `calc(${x}px),`
+    // + `calc(${y}px)`
+    // + `)`)
+
+    // tooltip.style("opacity", 1)
 
 
-    //get the x and y coord of dot, offset by left and right margins
-    const x = xScale(xAccessor(datum))
-    + dimensions.margin.left + 10
-    const y = yScale(yAccessor(datum))
-    + dimensions.margin.top + 190
+    const barLengths = [
+        {"metaphorType" : "Str", "count" : parseInt(datum.cnt_structural)},
+        {"metaphorType" : "Ont", "count" : parseInt(datum.cnt_ontological)},
+        {"metaphorType" : "Ori", "count" : parseInt(datum.cnt_orientational)},
+        {"metaphorType" : "Img", "count" : parseInt(datum.cnt_imagistic)},
+    ]
 
-    // move tooltip to dot position, with % shift so is centered, not top-left positioned
-    tooltip.style("transform", `translate(`
-    + `calc(${x}px),`
-    + `calc(${y}px)`
-    + `)`)
-
-    tooltip.style("opacity", 1)
+    updateBarPlot(barLengths)
 
     //CMT rationale
     structTT.text(structuralAccessor(datum))
@@ -192,16 +201,15 @@ function onMouseEnter(e, datum) {
     domainAccessorTT.text(domainAccessor(datum))
     secondDomainAccessorTT.text(secondaryDomainAccessor(datum))
 
-    imgPreview
-        .attr("src", imgURL(datum))
-        .attr("alt", "this is some alt text")
+    imgPreview.attr("src", "./images/placeholder.png")
+    imgPreview.attr("src", imgURL(datum))
     
     this.parentNode.appendChild(this); //move hovered item to top
 
     d3.select(this)
         .transition().ease(d3.easeLinear)
         .duration(400)
-        .attr("fill", "#5afaed") 
+        .attr("fill", "black") // BRIGHT TURQ #5afaed
         .attr("opacity", 1)
         .attr("r", 15)
     
@@ -214,10 +222,11 @@ function onMouseLeave() {
     d3.select(this)
         .transition().ease(d3.easeLinear)
         .duration(400)
-        .attr("fill", "rgb(1, 148, 136)")
+        .attr("fill", "gray")
         .attr("opacity", 0.5)
         .attr("r", 8)
 
+    //imgPreview.attr("src", "./images/placeholder.png")
 }
 
 function drawAxes(dataset, scatterBounds) {
@@ -317,7 +326,7 @@ async function drawScatterPlot(dataset) {
         .transition().duration(750)
         .attr("cx", d => xScale(xAccessor(d)))
         .attr("cy", d => yScale(yAccessor(d)))
-        .attr("fill", "rgb(1, 148, 136)")
+        .attr("fill", "gray") //teal color rgb(1, 148, 136)
         .attr("opacity", 0.5)
         .attr("r", 8)
 

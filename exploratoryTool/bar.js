@@ -27,16 +27,23 @@ dimensionsBar.boundedHeight = dimensionsBar.height
 // const xAccessorImag = d => d.imagistic
 
 const cmts = [
-    "Str",//"structural", 
-    "Ont",//"ontological",
-    "Ori",//"orientational",
-    "Img",//"imagistic"
+    "Str", 
+    "Ont",
+    "Ori",
+    "Img",
 ]
 
-const xAccessorStruct = d => parseFloat(d.cnt_structural)
-const xAccessorOnto = d => parseFloat(d.cnt_ontological)
-const xAccessorOrient = d => parseFloat(d.cnt_orientational)
-const xAccessorImag = d => parseFloat(d.cnt_imagistic)
+const barColors = d3.scaleOrdinal([
+    "#D7191D",
+    "#FDAE61",
+    "#ABDDA4",
+    "#2A83BA"
+])
+
+// const xAccessorStruct = d => parseFloat(d.cnt_structural)
+// const xAccessorOnto = d => parseFloat(d.cnt_ontological)
+// const xAccessorOrient = d => parseFloat(d.cnt_orientational)
+// const xAccessorImag = d => parseFloat(d.cnt_imagistic)
 
 // Create scales 
 const yScaleBar = d3.scaleBand()
@@ -45,19 +52,18 @@ const yScaleBar = d3.scaleBand()
     .padding(0.2)
 
 const xScaleBar = d3.scaleLinear()
-    .domain([0,10]) //consistent y-scaling
+    .domain([0,5]) //consistent y-scaling
     .range([0, dimensionsBar.boundedWidth])
 
 const xAxisGeneratorBar = d3.axisBottom()
+    .ticks(5)
     .scale(xScaleBar)
 
 const yAxisGeneratorBar = d3.axisLeft()
     .scale(yScaleBar)
 
 
-async function drawBarPlot(dataCSV) {
-    console.log(cmts)
-    console.log(yAccessorOnto(dataCSV[0]))
+async function drawBarPlot() {
 
     // Initial draw canvas 
     const barWrapper = d3.select("#barplot")
@@ -81,19 +87,22 @@ async function drawBarPlot(dataCSV) {
         .call(xAxisGeneratorBar)
         .attr("class", "barXaxis")
         .style("transform", `translateY(${dimensionsBar.boundedHeight}px)`)
-
-    const bars = scatterBounds.selectAll("rect").data(dataset)
-
-    bars
+    
+    const bars = barBounds.selectAll("rect")
+        .data([
+            {"metaphorType" : "Str", "count" : 0},
+            {"metaphorType" : "Ont", "count" : 0},
+            {"metaphorType" : "Ori", "count" : 0},
+            {"metaphorType" : "Img", "count" : 0},
+        ])
         .join("rect")
-        //.attr('class', 'circle-base')
-        .transition().duration(750)
         .attr("x", 0)
-        .attr("y", 30)
-        .attr("width", d => xScaleBar(xAccessorStruct(d)))
-        .attr("height", 10)
-        //.attr("fill", "rgb(1, 148, 136)")
-
+        .attr("y", d => yScaleBar(d.metaphorType))
+        .attr("width", d => xScaleBar(d.count))
+        .attr("height", 20)
+        .attr("fill", function(d,i) {
+            return barColors(i);
+        })
 
         // .join("rect")
         //     .attr("x", d => xScale(x1RectAccessor(d)))
@@ -102,9 +111,22 @@ async function drawBarPlot(dataCSV) {
         //     .attr("height", d => yScale(y1RectAccessor(d))-yScale(y2RectAccessor(d)))
         //     .attr("rx", 15)
         //     .attr("fill-opacity", 0.3)
-    
 
+}
 
+async function updateBarPlot(barLengths) {
+    console.log(barLengths)
+    const barBounds = d3.select("#bar-bounds")
 
-
+    const bars = barBounds.selectAll("rect").data(barLengths)
+        .join("rect")
+        .transition().duration(400)
+        .attr("x", 0)
+        .attr("y", d => yScaleBar(d.metaphorType))
+        .attr("width", d => xScaleBar(d.count))
+        .attr("height", 20)
+        .attr("fill", function(d,i) {
+            return barColors(i);
+        })
+        //.attr("fill", "rgb(1, 148, 136)")
 }
