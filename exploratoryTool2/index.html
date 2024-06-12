@@ -128,16 +128,17 @@
 
         d3.select("#climate").on("click", function(d, i) {
           // clearVis();
-          drawScatterPlot("./data/climate/climate.csv");
+          updateScatterPlot("./data/climate/climate.csv");
+          
         });
 
         d3.select("#space").on("click", function(d, i) {
           // clearVis();
-          drawScatterPlot("./data/space/space.csv");
+          updateScatterPlot("./data/space/space.csv");
         });
         d3.select("#anthro").on("click", function(d, i) {
           // clearVis();
-          drawScatterPlot("./data/anthro/anthro.csv");
+          updateScatterPlot("./data/anthro/anthro.csv");
         });
 
         </script>

@@ -1,4 +1,5 @@
-// 2. Set dimensions 
+// GLOBAL VARIABLES //
+// Set dimensions 
 const width = 500
 let dimensions = {
     width: width,
@@ -18,7 +19,25 @@ dimensions.boundedWidth = dimensions.width
 dimensions.boundedHeight = dimensions.height
     - dimensions.margin.top
     - dimensions.margin.bottom
-    
+
+// Create scales 
+const xScale = d3.scaleLinear()
+    .range([0, dimensions.boundedWidth])
+    //.nice()
+
+const yScale = d3.scaleLinear()
+    .range([dimensions.boundedHeight, 0])
+    //.nice()
+
+const xAccessor = d => parseFloat(d.x) / 10
+const yAccessor = d => parseFloat(d.y) / 10
+const imgTitle = d => d.name
+const imgAuthor = d => d.author
+const srcURL = d => d.url
+const imgURL = d => d.imageURL
+const domainAccessor = d => d.primarydomain
+const secondaryDomainAccessor = d => d.secondarydomain
+
 
 function domainTick(whichDomain) {
     if (whichDomain == " Biomedicine") {
@@ -111,7 +130,7 @@ function domainTick(whichDomain) {
 
 async function drawScatterPlot(dataCSV) {
 
-    // 3. Draw canvas 
+    // Initial draw canvas 
     const scatterWrapper = d3.select("#scatterplot")
         .append("svg")
         .attr("width", dimensions.width)
@@ -126,46 +145,12 @@ async function drawScatterPlot(dataCSV) {
         }px)`)
     
 
-    // 4. Create scales 
-    const xScale = d3.scaleLinear()
-        .range([0, dimensions.boundedWidth])
-        //.nice()
-    
-    const yScale = d3.scaleLinear()
-        .range([dimensions.boundedHeight, 0])
-        //.nice()
-
-
-    // 1. Access data 
+    // Access data 
     const dataset= await d3.csv(dataCSV)
     console.table(dataset[0])
 
-    const xAccessor = d => parseFloat(d.x) / 10
-    const yAccessor = d => parseFloat(d.y) / 10
-    const imgTitle = d => d.name
-    const imgAuthor = d => d.author
-    const srcURL = d => d.url
-    const imgURL = d => d.imageURL
-    const domainAccessor = d => d.primarydomain
-    const secondaryDomainAccessor = d => d.secondarydomain
-
     let whichDomain = domainAccessor(dataset[0])
 
-    // console.log(yAccessor(dataset[0]))
-    // console.log(xAccessor(dataset[0]))
-
-    //const rangeRectangles = await d3.csv(rectangles)
-    //console.log(rangeRectangles[0])
-    //xfrom,yfrom,xto,yto,color
-
-    // const x1RectAccessor = d => parseFloat(d.xfrom) / 10
-    // const x2RectAccessor = d => parseFloat(d.xto) / 10
-    // const y1RectAccessor = d => parseFloat(d.yfrom) / 10
-    // const y2RectAccessor = d => parseFloat(d.yto) / 10
-
-
-    function updateData(d){
-        //scatterBounds.exit().remove()
         
         let ticks = domainTick(whichDomain)
 
@@ -223,7 +208,7 @@ async function drawScatterPlot(dataCSV) {
                 .call(yAxisGenerator)
         
             //create update selection to bind new data
-            const dots = scatterBounds.selectAll("circle").data(d)
+            const dots = scatterBounds.selectAll("circle").data(dataset)
             
             // const sqs = scatterBounds.selectAll("rect").data(rangeRectangles)
 
@@ -240,7 +225,7 @@ async function drawScatterPlot(dataCSV) {
 
             dots
                 .join("circle")
-                .attr('class', 'circle-base')
+                //.attr('class', 'circle-base')
                 .transition().duration(750)
                 .attr("cx", d => xScale(xAccessor(d)))
                 .attr("cy", d => yScale(yAccessor(d)))
@@ -327,15 +312,26 @@ async function drawScatterPlot(dataCSV) {
 
                 }
             
-    }
-
-    updateData(dataset)
 }
 
 
-async function updateScatterPlot() {
+async function updateScatterPlot(dataCSV) {
+    const dataset= await d3.csv(dataCSV)
+    console.log("this is my new data")
+    console.table(dataset[1])
 
     const scatterBounds = d3.select("#scatter-bounds")
+
+    //create update selection to bind new data
+    const dots = scatterBounds.selectAll("circle").data(dataset).join("circle")
+    
+    dots
+        .transition().duration(3000)
+        .attr("cx", d => xScale(xAccessor(d)))
+        .attr("cy", d => yScale(yAccessor(d)))
+        .attr("fill", "black")
+        .attr("opacity", 0.2)
+        .attr("r", 10)
 
     scatterBounds.selectAll("circle")
         //.attr("fill", "grey")
