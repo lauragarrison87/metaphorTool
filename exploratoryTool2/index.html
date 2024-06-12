@@ -93,7 +93,8 @@
     </div>
 
     <script src="https://d3js.org/d3.v6.js"></script>
-    <script src="./scatterplot.js"></script>
+    <!-- <script src="./scatterplot.js"></script> -->
+    <script src="./scatterplotFilter.js"></script>
     <script src="./pie.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -101,31 +102,76 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 
     <script>
+      async function dataSlice(dataCSV){
+        const dataset= await d3.csv(dataCSV)
+
+        const biomedData = dataset.filter(d => {
+              if (d.primary_domain == "Biomedicine"){
+                return d
+              }
+            })
+        const climateData = dataset.filter(d => {
+          if (d.primary_domain == "Climate"){
+            return d
+          }
+        })
+        const spaceData = dataset.filter(d => {
+              if (d.primary_domain == "Space"){
+                return d
+              }
+            })
+        const anthroData = dataset.filter(d => {
+          if (d.primary_domain == "Anthropology"){
+            return d
+          }
+        })
+
+        console.table(dataset[0])
+
+        drawScatterPlot(biomedData) //initial draw
+        
+        d3.select("#biomed").on("click", function(d, i) {
+            updateScatterPlot(biomedData)
+          })
+        d3.select("#climate").on("click", function(d, i) {
+          updateScatterPlot(climateData)
+          })
+        d3.select("#space").on("click", function(d, i) {
+            updateScatterPlot(spaceData)
+          })
+        d3.select("#anthro").on("click", function(d, i) {
+          updateScatterPlot(anthroData)
+          })
+      }
+
+      dataSlice("./data/DATABASE_LG_reqs_HH_pass2.csv")
+
+      
 
       // initialized view 
-      drawScatterPlot("./data/biomed/biomed.csv");
+      // drawScatterPlot("./data/biomed/biomed.csv");
 
-      // view selection updates 
-      d3.select("#biomed").on("click", function(d, i) {
-          // clearVis();
-          updateScatterPlot("./data/biomed/biomed.csv");
-          //drawPieChart("./data/biomed/biomed.csv");
-        });
+      // // view selection updates 
+      // d3.select("#biomed").on("click", function(d, i) {
+      //     // clearVis();
+      //     updateScatterPlot("./data/biomed/biomed.csv");
+      //     //drawPieChart("./data/biomed/biomed.csv");
+      //   });
 
-        d3.select("#climate").on("click", function(d, i) {
-          // clearVis();
-          updateScatterPlot("./data/climate/climate.csv");
+      //   d3.select("#climate").on("click", function(d, i) {
+      //     // clearVis();
+      //     updateScatterPlot("./data/climate/climate.csv");
           
-        });
+      //   });
 
-        d3.select("#space").on("click", function(d, i) {
-          // clearVis();
-          updateScatterPlot("./data/space/space.csv");
-        });
-        d3.select("#anthro").on("click", function(d, i) {
-          // clearVis();
-          updateScatterPlot("./data/anthro/anthro.csv");
-        });
+      //   d3.select("#space").on("click", function(d, i) {
+      //     // clearVis();
+      //     updateScatterPlot("./data/space/space.csv");
+      //   });
+      //   d3.select("#anthro").on("click", function(d, i) {
+      //     // clearVis();
+      //     updateScatterPlot("./data/anthro/anthro.csv");
+      //   });
 
         </script>
 
