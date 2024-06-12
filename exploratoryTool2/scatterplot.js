@@ -173,12 +173,15 @@ function onMouseEnter(e, datum) {
         .attr("src", imgURL(datum))
         .attr("alt", "this is some alt text")
     
+    this.parentNode.appendChild(this); //move hovered item to top
+
     d3.select(this)
         .transition().ease(d3.easeLinear)
         .duration(400)
         .attr("fill", "#5afaed") 
         .attr("opacity", 1)
         .attr("r", 15)
+    
 
 }
 
@@ -193,9 +196,6 @@ function onMouseLeave() {
         .attr("r", 8)
 
 }
-
-
-
 
 function drawAxes(dataset, scatterBounds) {
     //this is duplicated code from initial scatterplot draw function
