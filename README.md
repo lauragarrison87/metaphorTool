@@ -3,7 +3,7 @@ This tool allows the exploration of deconstructed infographics and categorized v
 
 
 ## Getting started 
-1. `cd metaphorTool/exploratoryTool2`
+1. `cd metaphorTool/exploratoryTool`
 2. Start a local server. We tested with and recommend using Python Simple Server, which you can run in your terminal `python3 -m http.server --bind 127.0.0.1` (Mac/Linux) or `py -m http.server --bind 127.0.0.1` (Windows)
 3. With your local server running, load the page at the following link address in your web browser of choice (we have tested on Chrome, Firefox, and Safari): [http://127.0.0.1:8000/](http://127.0.0.1:8000/). This will load in the explorer initialized with the infographics from the biomedical domain.
 
