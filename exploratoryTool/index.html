@@ -81,7 +81,7 @@
               <div class="col-lg-2">
                   <h4>Conceptual metaphor analysis</h4>
 
-                  <div id="piechart"></div>
+                  <div id="barplot"></div>
 
                   <p>
                     <span class="emph">Structural:</span>
@@ -118,7 +118,7 @@
 
     <script src="https://d3js.org/d3.v6.js"></script>
     <script src="./scatterplotFilter.js"></script>
-    <script src="./pie.js"></script>
+    <script src="./bar.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
@@ -150,9 +150,10 @@
           }
         })
 
-        console.table(dataset[0])
+        //console.table(dataset[0])
 
         drawScatterPlot(biomedData) //initial draw
+        drawBarPlot(biomedData)
         
         d3.select("#biomed").on("click", function(d, i) {
             updateScatterPlot(biomedData)
@@ -170,32 +171,6 @@
 
       dataSlice("./data/DATABASE_LG_reqs_HH_pass2.csv")
 
-      
-
-      // initialized view 
-      // drawScatterPlot("./data/biomed/biomed.csv");
-
-      // // view selection updates 
-      // d3.select("#biomed").on("click", function(d, i) {
-      //     // clearVis();
-      //     updateScatterPlot("./data/biomed/biomed.csv");
-      //     //drawPieChart("./data/biomed/biomed.csv");
-      //   });
-
-      //   d3.select("#climate").on("click", function(d, i) {
-      //     // clearVis();
-      //     updateScatterPlot("./data/climate/climate.csv");
-          
-      //   });
-
-      //   d3.select("#space").on("click", function(d, i) {
-      //     // clearVis();
-      //     updateScatterPlot("./data/space/space.csv");
-      //   });
-      //   d3.select("#anthro").on("click", function(d, i) {
-      //     // clearVis();
-      //     updateScatterPlot("./data/anthro/anthro.csv");
-      //   });
 
         </script>
 
