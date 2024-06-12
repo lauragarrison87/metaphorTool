@@ -1,6 +1,7 @@
 // GLOBAL VARIABLES //
 // Set dimensions 
 const width = 500
+
 let dimensions = {
     width: width,
     height: width,
@@ -23,11 +24,10 @@ dimensions.boundedHeight = dimensions.height
 // Create scales 
 const xScale = d3.scaleLinear()
     .range([0, dimensions.boundedWidth])
-    //.nice()
 
 const yScale = d3.scaleLinear()
     .range([dimensions.boundedHeight, 0])
-    //.nice()
+
 
 const xAccessor = d => parseFloat(d.x) / 10
 const yAccessor = d => parseFloat(d.y) / 10
@@ -37,6 +37,14 @@ const srcURL = d => d.url
 const imgURL = d => d.imageURL
 const domainAccessor = d => d.primarydomain
 const secondaryDomainAccessor = d => d.secondarydomain
+
+const tooltip = d3.select("#tooltip")
+const imgTitleTT = d3.select("#name-title")
+const imgAuthorTT = d3.select("#author-title")
+const srcURLTT = d3.select("#link-title")
+const domainAccessorTT = d3.select("#primary-domain-title")
+const secondDomainAccessorTT = d3.select("#secondary-domain-title")
+const imgPreview = d3.select("#preview-img")
 
 
 function domainTick(whichDomain) {
@@ -128,6 +136,58 @@ function domainTick(whichDomain) {
 
 }
 
+function onMouseEnter(e, datum) {
+    tooltip.select("#values")
+        .style("font-size", "0.7em")
+        .text(imgTitle(datum))
+
+
+    //get the x and y coord of dot, offset by left and right margins
+    const x = xScale(xAccessor(datum))
+    + dimensions.margin.left + 10
+    const y = yScale(yAccessor(datum))
+    + dimensions.margin.top + 190
+
+    // move tooltip to dot position, with % shift so is centered, not top-left positioned
+    tooltip.style("transform", `translate(`
+    + `calc(${x}px),`
+    + `calc(${y}px)`
+    + `)`)
+
+    tooltip.style("opacity", 1)
+
+    // Other image metadata to populate based on mouseHover:
+    imgTitleTT.text(imgTitle(datum))
+    imgAuthorTT.text(imgAuthor(datum))
+    srcURLTT.text(srcURL(datum))
+    domainAccessorTT.text(domainAccessor(datum))
+    secondDomainAccessorTT.text(secondaryDomainAccessor(datum))
+
+    imgPreview
+        .attr("src", imgURL(datum))
+        .attr("alt", "this is some alt text")
+    
+    d3.select(this)
+        .transition().ease(d3.easeLinear)
+        .duration(400)
+        .attr("fill", "#5afaed") 
+        .attr("opacity", 1)
+        .attr("r", 15)
+
+}
+
+function onMouseLeave() {
+    tooltip.style("opacity", 0)
+
+    d3.select(this)
+        .transition().ease(d3.easeLinear)
+        .duration(400)
+        .attr("fill", "rgb(1, 148, 136)")
+        .attr("opacity", 0.5)
+        .attr("r", 8)
+
+}
+
 async function drawScatterPlot(dataCSV) {
 
     // Initial draw canvas 
@@ -151,167 +211,93 @@ async function drawScatterPlot(dataCSV) {
 
     let whichDomain = domainAccessor(dataset[0])
 
+    let ticks = domainTick(whichDomain)
+
+    // X AXIS
+    let xAxisGenerator = d3.axisBottom()
+        .scale(xScale)
+        .ticks(ticks[0].length)
+        .tickFormat(d => ticks[0][d-1])
+
+    const xAxis = scatterBounds.append("g")
+        .call(xAxisGenerator)
+        .style("transform", `translateY(${dimensions.boundedHeight}px)`)
+        .attr("class", "myXaxis")
         
-        let ticks = domainTick(whichDomain)
 
-        // X AXIS
-        const xAxisGenerator = d3.axisBottom()
-            .scale(xScale)
-            .ticks(ticks[0].length)
-            .tickFormat(d => ticks[0][d-1])
+    scatterBounds.append("text")
+        .attr("class", "x label")
+        .attr("text-anchor", "end")
+        .attr("x", dimensions.boundedWidth)
+        .attr("y", dimensions.boundedHeight + 40)
+        .text("TEMPORAL COVERAGE");
 
-        const xAxis = scatterBounds.append("g")
+    // Y AXIS 
+    let yAxisGenerator = d3.axisLeft()
+        .scale(yScale)
+        .ticks(ticks[1].length)
+        .tickFormat(d => ticks[1][d-1])
+
+    const yAxis = scatterBounds.append("g")
+        .call(yAxisGenerator)
+        .attr("class", "myYaxis")
+
+    scatterBounds.append("text")
+        .attr("class", "y label")
+        .attr("text-anchor", "end")
+        .attr("y", -dimensions.margin.left + 15)
+        .attr("x", -dimensions.margin.top)
+        .attr("fill", "black")
+        //.style("font-size", "1.2em")
+        .attr("transform", "rotate(-90)")
+        .text("SPATIAL COVERAGE")
+
+
+        //create X axis 
+        xScale.domain([d3.extent(dataset, xAccessor)[0]-0.5, d3.extent(dataset, xAccessor)[1]+0.5])
+        scatterBounds.selectAll(".myXaxis").transition()
+            .duration(750)
             .call(xAxisGenerator)
-            .style("transform", `translateY(${dimensions.boundedHeight}px)`)
-            .attr("class", "myXaxis")
-            
 
-        scatterBounds.append("text")
-            .attr("class", "x label")
-            .attr("text-anchor", "end")
-            .attr("x", dimensions.boundedWidth)
-            .attr("y", dimensions.boundedHeight + 40)
-            .text("TEMPORAL COVERAGE");
-
-        // Y AXIS 
-        const yAxisGenerator = d3.axisLeft()
-            .scale(yScale)
-            .ticks(ticks[1].length)
-            .tickFormat(d => ticks[1][d-1])
-
-        const yAxis = scatterBounds.append("g")
+        // create Yaxis
+        yScale.domain([d3.extent(dataset, xAccessor)[0]-0.5, d3.extent(dataset, yAccessor)[1]+0.5]) 
+        scatterBounds.selectAll(".myYaxis").transition()
+            .duration(750)
             .call(yAxisGenerator)
-            .attr("class", "myYaxis")
-    
-        scatterBounds.append("text")
-            .attr("class", "y label")
-            .attr("text-anchor", "end")
-            .attr("y", -dimensions.margin.left + 15)
-            .attr("x", -dimensions.margin.top)
-            .attr("fill", "black")
-            //.style("font-size", "1.2em")
-            .attr("transform", "rotate(-90)")
-            .text("SPATIAL COVERAGE")
-
-
-            //create X axis 
-            xScale.domain([d3.extent(dataset, xAccessor)[0]-0.5, d3.extent(dataset, xAccessor)[1]+0.5])
-            scatterBounds.selectAll(".myXaxis").transition()
-                .duration(750)
-                .call(xAxisGenerator)
-
-
-            // create Yaxis
-            yScale.domain([d3.extent(dataset, xAccessor)[0]-0.5, d3.extent(dataset, yAccessor)[1]+0.5]) 
-            scatterBounds.selectAll(".myYaxis").transition()
-                .duration(750)
-                .call(yAxisGenerator)
-        
-            //create update selection to bind new data
-            const dots = scatterBounds.selectAll("circle").data(dataset)
-            
-            // const sqs = scatterBounds.selectAll("rect").data(rangeRectangles)
-
-            // sqs
-            //     .join("rect")
-            //     .attr("x", d => xScale(x1RectAccessor(d)))
-            //     .attr("y", d => yScale(y2RectAccessor(d)))
-            //     .attr("width", d => xScale(x2RectAccessor(d))-xScale(x1RectAccessor(d)))
-            //     .attr("height", d => yScale(y1RectAccessor(d))-yScale(y2RectAccessor(d)))
-            //     .attr("rx", 15)
-            //     .attr("fill-opacity", 0.3)
-
-            //const dots = scatterBounds.selectAll("circle").data(dataset)
-
-            dots
-                .join("circle")
-                //.attr('class', 'circle-base')
-                .transition().duration(750)
-                .attr("cx", d => xScale(xAccessor(d)))
-                .attr("cy", d => yScale(yAccessor(d)))
-                .attr("fill", "rgb(1, 148, 136)")
-                .attr("opacity", 0.5)
-                .attr("r", 8)
-
-            
-                // PLAYING: add event listener to each circle per https://observablehq.com/@hydrosquall/d3-tutorial-interactivity-animated-transitions
-            scatterBounds.selectAll("circle")
-                //.attr("fill", "grey")
-                .on("mouseover", function(d){
-                    console.log(d) //check that am accessing data object
-                    console.log(this) //check access to DOM object
-                    d3.select(this)
-                        .transition().ease(d3.easeLinear)
-                        .duration(400)
-                        .attr("fill", "#5afaed") 
-                        .attr("opacity", 1)
-                        .attr("r", 15)
-
-                })
-                .on("mouseout", function(d){
-                    d3.select(this)
-                    .transition().ease(d3.easeLinear)
-                    .duration(400)
-                    .attr("fill", "rgb(1, 148, 136)")
-                    .attr("opacity", 0.5)
-                    .attr("r", 8)
-                })
-
-                // 7. Interactions
-                scatterBounds.selectAll("circle").on("mouseenter", function(e, d){
-                    console.log(e.target)
-                })
-
-                scatterBounds.selectAll("circle")
-                    .on("mouseenter", onMouseEnter)
-                    .on("mouseleave", onMouseLeave)
-
-                const tooltip = d3.select("#tooltip")
-                const imgTitleTT = d3.select("#name-title")
-                const imgAuthorTT = d3.select("#author-title")
-                const srcURLTT = d3.select("#link-title")
-                const domainAccessorTT = d3.select("#primary-domain-title")
-                const secondDomainAccessorTT = d3.select("#secondary-domain-title")
-                const imgPreview = d3.select("#preview-img")
-                
-                function onMouseEnter(e, datum) {
-                    tooltip.select("#values")
-                        .style("font-size", "0.7em")
-                        .text(imgTitle(datum))
 
         
-                //get the x and y coord of dot, offset by left and right margins
-                const x = xScale(xAccessor(datum))
-                + dimensions.margin.left + 10
-                const y = yScale(yAccessor(datum))
-                + dimensions.margin.top + 190
+        // const sqs = scatterBounds.selectAll("rect").data(rangeRectangles)
+        // sqs
+        //     .join("rect")
+        //     .attr("x", d => xScale(x1RectAccessor(d)))
+        //     .attr("y", d => yScale(y2RectAccessor(d)))
+        //     .attr("width", d => xScale(x2RectAccessor(d))-xScale(x1RectAccessor(d)))
+        //     .attr("height", d => yScale(y1RectAccessor(d))-yScale(y2RectAccessor(d)))
+        //     .attr("rx", 15)
+        //     .attr("fill-opacity", 0.3)
 
-                // move tooltip to dot position, with % shift so is centered, not top-left positioned
-                tooltip.style("transform", `translate(`
-                + `calc(${x}px),`
-                + `calc(${y}px)`
-                + `)`)
+        //create update selection to bind new data
+        const dots = scatterBounds.selectAll("circle").data(dataset)
 
-                tooltip.style("opacity", 1)
-          
-                // Other image metadata to populate based on mouseHover:
-                imgTitleTT.text(imgTitle(datum))
-                imgAuthorTT.text(imgAuthor(datum))
-                srcURLTT.text(srcURL(datum))
-                domainAccessorTT.text(domainAccessor(datum))
-                secondDomainAccessorTT.text(secondaryDomainAccessor(datum))
+        dots
+            .join("circle")
+            //.attr('class', 'circle-base')
+            .transition().duration(750)
+            .attr("cx", d => xScale(xAccessor(d)))
+            .attr("cy", d => yScale(yAccessor(d)))
+            .attr("fill", "rgb(1, 148, 136)")
+            .attr("opacity", 0.5)
+            .attr("r", 8)
 
-                imgPreview
-                    .attr("src", imgURL(datum))
-                    .attr("alt", "this is some alt text")
-            
-                }
 
-                function onMouseLeave() {
-                    tooltip.style("opacity", 0)
+        // INTERACTIONS 
+        scatterBounds.selectAll("circle").on("mouseenter", function(e, d){
+            console.log(e.target)
+        })
 
-                }
-            
+        scatterBounds.selectAll("circle")
+            .on("mouseenter", onMouseEnter)
+            .on("mouseleave", onMouseLeave)                         
 }
 
 
@@ -320,31 +306,44 @@ async function updateScatterPlot(dataCSV) {
     console.log("this is my new data")
     console.table(dataset[1])
 
+    //this is duplicated code from initial scatterplot draw function
+    let whichDomain = domainAccessor(dataset[0])
+
+    let ticks = domainTick(whichDomain)
+
+    let xAxisGenerator = d3.axisBottom()
+        .scale(xScale)
+        .ticks(ticks[0].length)
+        .tickFormat(d => ticks[0][d-1])
+
+    let yAxisGenerator = d3.axisLeft()
+        .scale(yScale)
+        .ticks(ticks[1].length)
+        .tickFormat(d => ticks[1][d-1])
+    //
+
     const scatterBounds = d3.select("#scatter-bounds")
 
-    //create update selection to bind new data
-    const dots = scatterBounds.selectAll("circle").data(dataset).join("circle")
+    //redraw x axis
+    xScale.domain([d3.extent(dataset, xAccessor)[0]-0.5, d3.extent(dataset, xAccessor)[1]+0.5])
+    scatterBounds.selectAll(".myXaxis").transition()
+        .duration(750)
+        .call(xAxisGenerator)
+
+    //redraw y axis 
+    yScale.domain([d3.extent(dataset, xAccessor)[0]-0.5, d3.extent(dataset, yAccessor)[1]+0.5]) 
+        scatterBounds.selectAll(".myYaxis").transition()
+            .duration(750)
+            .call(yAxisGenerator)
+
+    // redraw dots in new position
+    const dots = scatterBounds.selectAll("circle").data(dataset)
     
     dots
-        .transition().duration(3000)
+        .join("circle")
+        .transition().duration(1000)
         .attr("cx", d => xScale(xAccessor(d)))
         .attr("cy", d => yScale(yAccessor(d)))
-        .attr("fill", "black")
-        .attr("opacity", 0.2)
-        .attr("r", 10)
 
-    scatterBounds.selectAll("circle")
-        //.attr("fill", "grey")
-        .on("mouseover", function(d){
-            console.log(d) //check that am accessing data object
-            console.log(this) //check access to DOM object
-            d3.select(this)
-                .transition().ease(d3.easeLinear)
-                .duration(400)
-                .attr("fill", "yellowgreen") 
-                .attr("opacity", 1)
-                .attr("r", 40)
-
-        })
 }
 
