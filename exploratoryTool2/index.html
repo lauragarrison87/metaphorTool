@@ -94,7 +94,6 @@
 
     <script src="https://d3js.org/d3.v6.js"></script>
     <script src="./scatterplot.js"></script>
-    <!-- <script src="./updateScatter.js"></script> -->
     <script src="./pie.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -102,19 +101,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 
     <script>
-      // GLOBALS - from original
-      // let data = undefined;
-      // let rectangles = undefined;
-      // let chosenImg = '';
-      // let piechartValues = undefined;
-      
-      // clearVis() adapted from https://stackoverflow.com/questions/56128552/how-to-switch-csv-dataset-of-d3-js-graph-to-another-csv-by-clicking-on-button
-      function clearVis() {
-        var scatterNode = document.getElementById("scatterplot");
-        while (scatterNode.firstChild) {
-          scatterNode.removeChild(scatterNode.firstChild);
-        }
-      }
 
       // initialized view 
       drawScatterPlot("./data/biomed/biomed.csv");

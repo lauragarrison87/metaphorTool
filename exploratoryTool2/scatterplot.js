@@ -28,6 +28,12 @@ const xScale = d3.scaleLinear()
 const yScale = d3.scaleLinear()
     .range([dimensions.boundedHeight, 0])
 
+const xAxisGenerator = d3.axisBottom()
+    .scale(xScale)
+
+const yAxisGenerator = d3.axisLeft()
+    .scale(yScale)
+
 
 const xAccessor = d => parseFloat(d.x) / 10
 const yAccessor = d => parseFloat(d.y) / 10
@@ -188,6 +194,36 @@ function onMouseLeave() {
 
 }
 
+
+
+
+function drawAxes(dataset, scatterBounds) {
+    //this is duplicated code from initial scatterplot draw function
+    let whichDomain = domainAccessor(dataset[0])
+
+    let ticks = domainTick(whichDomain)
+
+    xAxisGenerator
+        .ticks(ticks[0].length)
+        .tickFormat(d => ticks[0][d-1])
+
+    yAxisGenerator
+        .ticks(ticks[1].length)
+        .tickFormat(d => ticks[1][d-1])
+
+    //redraw x axis
+    xScale.domain([d3.extent(dataset, xAccessor)[0]-0.5, d3.extent(dataset, xAccessor)[1]+0.5])
+    scatterBounds.selectAll(".myXaxis").transition()
+        .duration(750)
+        .call(xAxisGenerator)
+
+    //redraw y axis 
+    yScale.domain([d3.extent(dataset, xAccessor)[0]-0.5, d3.extent(dataset, yAccessor)[1]+0.5]) 
+        scatterBounds.selectAll(".myYaxis").transition()
+            .duration(750)
+            .call(yAxisGenerator)
+}
+
 async function drawScatterPlot(dataCSV) {
 
     // Initial draw canvas 
@@ -209,34 +245,12 @@ async function drawScatterPlot(dataCSV) {
     const dataset= await d3.csv(dataCSV)
     console.table(dataset[0])
 
-    let whichDomain = domainAccessor(dataset[0])
-
-    let ticks = domainTick(whichDomain)
-
-    // X AXIS
-    let xAxisGenerator = d3.axisBottom()
-        .scale(xScale)
-        .ticks(ticks[0].length)
-        .tickFormat(d => ticks[0][d-1])
-
+    drawAxes(dataset, scatterBounds)
+    
     const xAxis = scatterBounds.append("g")
         .call(xAxisGenerator)
         .style("transform", `translateY(${dimensions.boundedHeight}px)`)
         .attr("class", "myXaxis")
-        
-
-    scatterBounds.append("text")
-        .attr("class", "x label")
-        .attr("text-anchor", "end")
-        .attr("x", dimensions.boundedWidth)
-        .attr("y", dimensions.boundedHeight + 40)
-        .text("TEMPORAL COVERAGE");
-
-    // Y AXIS 
-    let yAxisGenerator = d3.axisLeft()
-        .scale(yScale)
-        .ticks(ticks[1].length)
-        .tickFormat(d => ticks[1][d-1])
 
     const yAxis = scatterBounds.append("g")
         .call(yAxisGenerator)
@@ -252,52 +266,46 @@ async function drawScatterPlot(dataCSV) {
         .attr("transform", "rotate(-90)")
         .text("SPATIAL COVERAGE")
 
-
-        //create X axis 
-        xScale.domain([d3.extent(dataset, xAccessor)[0]-0.5, d3.extent(dataset, xAccessor)[1]+0.5])
-        scatterBounds.selectAll(".myXaxis").transition()
-            .duration(750)
-            .call(xAxisGenerator)
-
-        // create Yaxis
-        yScale.domain([d3.extent(dataset, xAccessor)[0]-0.5, d3.extent(dataset, yAccessor)[1]+0.5]) 
-        scatterBounds.selectAll(".myYaxis").transition()
-            .duration(750)
-            .call(yAxisGenerator)
+    scatterBounds.append("text")
+        .attr("class", "x label")
+        .attr("text-anchor", "end")
+        .attr("x", dimensions.boundedWidth)
+        .attr("y", dimensions.boundedHeight + 40)
+        .text("TEMPORAL COVERAGE");
 
         
-        // const sqs = scatterBounds.selectAll("rect").data(rangeRectangles)
-        // sqs
-        //     .join("rect")
-        //     .attr("x", d => xScale(x1RectAccessor(d)))
-        //     .attr("y", d => yScale(y2RectAccessor(d)))
-        //     .attr("width", d => xScale(x2RectAccessor(d))-xScale(x1RectAccessor(d)))
-        //     .attr("height", d => yScale(y1RectAccessor(d))-yScale(y2RectAccessor(d)))
-        //     .attr("rx", 15)
-        //     .attr("fill-opacity", 0.3)
+    // const sqs = scatterBounds.selectAll("rect").data(rangeRectangles)
+    // sqs
+    //     .join("rect")
+    //     .attr("x", d => xScale(x1RectAccessor(d)))
+    //     .attr("y", d => yScale(y2RectAccessor(d)))
+    //     .attr("width", d => xScale(x2RectAccessor(d))-xScale(x1RectAccessor(d)))
+    //     .attr("height", d => yScale(y1RectAccessor(d))-yScale(y2RectAccessor(d)))
+    //     .attr("rx", 15)
+    //     .attr("fill-opacity", 0.3)
 
-        //create update selection to bind new data
-        const dots = scatterBounds.selectAll("circle").data(dataset)
+    //create update selection to bind new data
+    const dots = scatterBounds.selectAll("circle").data(dataset)
 
-        dots
-            .join("circle")
-            //.attr('class', 'circle-base')
-            .transition().duration(750)
-            .attr("cx", d => xScale(xAccessor(d)))
-            .attr("cy", d => yScale(yAccessor(d)))
-            .attr("fill", "rgb(1, 148, 136)")
-            .attr("opacity", 0.5)
-            .attr("r", 8)
+    dots
+        .join("circle")
+        //.attr('class', 'circle-base')
+        .transition().duration(750)
+        .attr("cx", d => xScale(xAccessor(d)))
+        .attr("cy", d => yScale(yAccessor(d)))
+        .attr("fill", "rgb(1, 148, 136)")
+        .attr("opacity", 0.5)
+        .attr("r", 8)
 
 
-        // INTERACTIONS 
-        scatterBounds.selectAll("circle").on("mouseenter", function(e, d){
-            console.log(e.target)
-        })
+    // INTERACTIONS 
+    scatterBounds.selectAll("circle").on("mouseenter", function(e, d){
+        console.log(e.target)
+    })
 
-        scatterBounds.selectAll("circle")
-            .on("mouseenter", onMouseEnter)
-            .on("mouseleave", onMouseLeave)                         
+    scatterBounds.selectAll("circle")
+        .on("mouseenter", onMouseEnter)
+        .on("mouseleave", onMouseLeave)                         
 }
 
 
@@ -306,35 +314,10 @@ async function updateScatterPlot(dataCSV) {
     console.log("this is my new data")
     console.table(dataset[1])
 
-    //this is duplicated code from initial scatterplot draw function
-    let whichDomain = domainAccessor(dataset[0])
-
-    let ticks = domainTick(whichDomain)
-
-    let xAxisGenerator = d3.axisBottom()
-        .scale(xScale)
-        .ticks(ticks[0].length)
-        .tickFormat(d => ticks[0][d-1])
-
-    let yAxisGenerator = d3.axisLeft()
-        .scale(yScale)
-        .ticks(ticks[1].length)
-        .tickFormat(d => ticks[1][d-1])
-    //
-
     const scatterBounds = d3.select("#scatter-bounds")
 
-    //redraw x axis
-    xScale.domain([d3.extent(dataset, xAccessor)[0]-0.5, d3.extent(dataset, xAccessor)[1]+0.5])
-    scatterBounds.selectAll(".myXaxis").transition()
-        .duration(750)
-        .call(xAxisGenerator)
-
-    //redraw y axis 
-    yScale.domain([d3.extent(dataset, xAccessor)[0]-0.5, d3.extent(dataset, yAccessor)[1]+0.5]) 
-        scatterBounds.selectAll(".myYaxis").transition()
-            .duration(750)
-            .call(yAxisGenerator)
+    // redraw X and Y axes 
+    drawAxes(dataset, scatterBounds)
 
     // redraw dots in new position
     const dots = scatterBounds.selectAll("circle").data(dataset)
