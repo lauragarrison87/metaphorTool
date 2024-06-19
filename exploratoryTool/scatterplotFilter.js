@@ -210,7 +210,7 @@ function onMouseLeave() {
     //imgPreview.attr("src", "./images/placeholder.png")
 }
 
-function drawAxes(dataset, scatterBounds) {
+function setTickMarks(dataset) {
     let whichDomain = domainAccessor(dataset[0])
     console.log(dataset[0])
 
@@ -224,7 +224,9 @@ function drawAxes(dataset, scatterBounds) {
     yAxisGenerator
         .ticks(ticks[1].length)
         .tickFormat(d => ticks[1][d-1])
+}
 
+function styleAxes(dataset, scatterBounds) {        
     //redraw x axis
     xScale.domain([d3.extent(dataset, xAccessor)[0]-0.5, d3.extent(dataset, xAccessor)[1]+0.5])
     scatterBounds.selectAll(".myXaxis").transition()
@@ -264,24 +266,28 @@ async function drawScatterPlot(dataset) {
     //const dataset= await d3.csv(dataCSV)
     //console.table(dataset[0])
 
-    drawAxes(dataset, scatterBounds)
+    setTickMarks(dataset)
 
     const xAxis = scatterBounds.append("g")
         .call(xAxisGenerator)
         .style("transform", `translateY(${dimensions.boundedHeight}px)`)
         .attr("class", "myXaxis")
     
-    scatterBounds.selectAll(".myXaxis")
-        .selectAll("text")  
-        .style("text-anchor", "end")
-        .attr("dx", "-.8em")
-        .attr("dy", ".15em")
-        .attr("transform", "rotate(-30)")
+    // scatterBounds.selectAll(".myXaxis")
+    //     .selectAll("text")  
+    //     .style("text-anchor", "end")
+    //     .attr("dx", "-.8em")
+    //     .attr("dy", ".15em")
+    //     .attr("transform", "rotate(-30)")
 
     const yAxis = scatterBounds.append("g")
         .call(yAxisGenerator)
         .attr("class", "myYaxis")
     
+
+    styleAxes(dataset, scatterBounds)
+
+
     scatterBounds.append("text")
         .attr("class", "y label")
         .attr("text-anchor", "end")
@@ -343,7 +349,8 @@ async function updateScatterPlot(dataset) {
     const scatterBounds = d3.select("#scatter-bounds")
 
     // redraw X and Y axes 
-    drawAxes(dataset, scatterBounds)
+    setTickMarks(dataset)
+    styleAxes(dataset, scatterBounds)
 
     // redraw dots in new position
     const dots = scatterBounds.selectAll("circle").data(dataset)
