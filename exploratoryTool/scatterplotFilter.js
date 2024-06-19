@@ -1,6 +1,6 @@
 // GLOBAL VARIABLES //
 // Set dimensions 
-const width = 500
+const width = 360
 
 let dimensions = {
     width: width,
@@ -8,7 +8,7 @@ let dimensions = {
     margin: {
         top: 20, 
         right: 20,
-        bottom: 80,
+        bottom: 100,
         left: 100,
     },
 }
@@ -158,25 +158,7 @@ function domainTick(whichDomain) {
 }
 
 function onMouseEnter(e, datum) {
-    // tooltip.select("#values")
-    //     .style("font-size", "0.7em")
-    //     .text(imgTitle(datum))
-
-    // //get the x and y coord of dot, offset by left and right margins
-    // const x = xScale(xAccessor(datum))
-    // + dimensions.margin.left + 10
-    // const y = yScale(yAccessor(datum))
-    // + dimensions.margin.top + 190
-
-    // // move tooltip to dot position, with % shift so is centered, not top-left positioned
-    // tooltip.style("transform", `translate(`
-    // + `calc(${x}px),`
-    // + `calc(${y}px)`
-    // + `)`)
-
-    // tooltip.style("opacity", 1)
-
-
+    
     const barLengths = [
         {"metaphorType" : "Str", "count" : parseInt(datum.cnt_structural)},
         {"metaphorType" : "Ont", "count" : parseInt(datum.cnt_ontological)},
@@ -211,8 +193,7 @@ function onMouseEnter(e, datum) {
         .duration(400)
         .attr("fill", "black") // BRIGHT TURQ #5afaed
         .attr("opacity", 1)
-        .attr("r", 15)
-    
+        .attr("r", 10)
 
 }
 
@@ -224,17 +205,17 @@ function onMouseLeave() {
         .duration(400)
         .attr("fill", "gray")
         .attr("opacity", 0.5)
-        .attr("r", 8)
+        .attr("r", 5)
 
     //imgPreview.attr("src", "./images/placeholder.png")
 }
 
 function drawAxes(dataset, scatterBounds) {
     let whichDomain = domainAccessor(dataset[0])
-    console.log("inside drawAxes function:")
     console.log(dataset[0])
 
     let ticks = domainTick(whichDomain)
+    console.log(ticks)
 
     xAxisGenerator
         .ticks(ticks[0].length)
@@ -249,6 +230,11 @@ function drawAxes(dataset, scatterBounds) {
     scatterBounds.selectAll(".myXaxis").transition()
         .duration(750)
         .call(xAxisGenerator)
+        .selectAll("text")  
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-30)")
 
     //redraw y axis 
     yScale.domain([d3.extent(dataset, xAccessor)[0]-0.5, d3.extent(dataset, yAccessor)[1]+0.5]) 
@@ -279,16 +265,23 @@ async function drawScatterPlot(dataset) {
     //console.table(dataset[0])
 
     drawAxes(dataset, scatterBounds)
-    
+
     const xAxis = scatterBounds.append("g")
         .call(xAxisGenerator)
         .style("transform", `translateY(${dimensions.boundedHeight}px)`)
         .attr("class", "myXaxis")
+    
+    scatterBounds.selectAll(".myXaxis")
+        .selectAll("text")  
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-30)")
 
     const yAxis = scatterBounds.append("g")
         .call(yAxisGenerator)
         .attr("class", "myYaxis")
-
+    
     scatterBounds.append("text")
         .attr("class", "y label")
         .attr("text-anchor", "end")
@@ -303,7 +296,7 @@ async function drawScatterPlot(dataset) {
         .attr("class", "x label")
         .attr("text-anchor", "end")
         .attr("x", dimensions.boundedWidth)
-        .attr("y", dimensions.boundedHeight + 40)
+        .attr("y", dimensions.boundedHeight + 55)
         .text("TEMPORAL COVERAGE");
 
         
@@ -328,7 +321,7 @@ async function drawScatterPlot(dataset) {
         .attr("cy", d => yScale(yAccessor(d)))
         .attr("fill", "gray") //teal color rgb(1, 148, 136)
         .attr("opacity", 0.5)
-        .attr("r", 8)
+        .attr("r", 5)
 
 
     // INTERACTIONS 
