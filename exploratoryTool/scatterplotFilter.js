@@ -35,8 +35,17 @@ const yAxisGenerator = d3.axisLeft()
     .scale(yScale)
 
 
-const xAccessor = d => parseFloat(d.xfrom) + 0.5 * Math.random() //hack to spread points a wee bit 
-const yAccessor = d => parseFloat(d.yfrom) + 0.5 * Math.random() //hack to spread points a wee bit that overlap exactly
+//to draw circles
+const xAccessor = d => (parseFloat(d.xfrom) + parseFloat(d.xto)) / 2 + 0.4 * Math.random() //hack to spread points a wee bit 
+const yAccessor = d => (parseFloat(d.yfrom) + parseFloat(d.yto)) / 2 + 0.4 * Math.random() //hack to spread points a wee bit that overlap exactly
+
+//to draw rects 
+const xfromAccessor = d => parseFloat(d.xfrom)
+const yfromAccessor = d => parseFloat(d.yfrom)
+const xtoAccessor = d => parseFloat(d.xto)
+const ytoAccessor = d => parseFloat(d.yto)
+
+// to draw text
 const imgTitle = d => d.name
 const imgAuthor = d => d.author
 const srcURL = d => d.url
@@ -228,7 +237,7 @@ function setTickMarks(dataset) {
 
 function styleAxes(dataset, scatterBounds) {        
     //redraw x axis
-    xScale.domain([d3.extent(dataset, xAccessor)[0]-0.5, d3.extent(dataset, xAccessor)[1]+0.5])
+    xScale.domain([d3.extent(dataset, xfromAccessor)[0], d3.extent(dataset, xtoAccessor)[1]])
     scatterBounds.selectAll(".myXaxis").transition()
         .duration(750)
         .call(xAxisGenerator)
@@ -239,7 +248,7 @@ function styleAxes(dataset, scatterBounds) {
         .attr("transform", "rotate(-30)")
 
     //redraw y axis 
-    yScale.domain([d3.extent(dataset, xAccessor)[0]-0.5, d3.extent(dataset, yAccessor)[1]+0.5]) 
+    yScale.domain([d3.extent(dataset, yfromAccessor)[0], d3.extent(dataset, ytoAccessor)[1]]) 
         scatterBounds.selectAll(".myYaxis").transition()
             .duration(750)
             .call(yAxisGenerator)
@@ -305,16 +314,19 @@ async function drawScatterPlot(dataset) {
         .attr("y", dimensions.boundedHeight + 55)
         .text("TEMPORAL COVERAGE");
 
-        
-    // const sqs = scatterBounds.selectAll("rect").data(rangeRectangles)
-    // sqs
-    //     .join("rect")
-    //     .attr("x", d => xScale(x1RectAccessor(d)))
-    //     .attr("y", d => yScale(y2RectAccessor(d)))
-    //     .attr("width", d => xScale(x2RectAccessor(d))-xScale(x1RectAccessor(d)))
-    //     .attr("height", d => yScale(y1RectAccessor(d))-yScale(y2RectAccessor(d)))
-    //     .attr("rx", 15)
-    //     .attr("fill-opacity", 0.3)
+  
+    const sqs = scatterBounds.selectAll("rect").data(dataset)
+    sqs
+        .join("rect")
+        .attr("x", d => xScale(xfromAccessor(d)))
+        .attr("y", d => yScale(ytoAccessor(d)))
+        .attr("width", d => xScale(xtoAccessor(d))-xScale(xfromAccessor(d)))
+        .attr("height", d => yScale(yfromAccessor(d))-yScale(ytoAccessor(d)))
+        //.attr("rx", 15)
+        .attr("fill-opacity", 0.3)
+        .attr("stroke","black")
+        .attr("fill", "lightgreen")
+
 
     //create update selection to bind new data
     const dots = scatterBounds.selectAll("circle").data(dataset)
@@ -352,10 +364,25 @@ async function updateScatterPlot(dataset) {
     setTickMarks(dataset)
     styleAxes(dataset, scatterBounds)
 
+    //redraw squares in new position
+    scatterBounds.selectAll("rect")
+        .data(dataset)
+        .join("rect")
+        .transition().duration(1000)
+        .attr("x", d => xScale(xfromAccessor(d)))
+        .attr("y", d => yScale(ytoAccessor(d)))
+        .attr("width", d => xScale(xtoAccessor(d))-xScale(xfromAccessor(d)))
+        .attr("height", d => yScale(yfromAccessor(d))-yScale(ytoAccessor(d)))
+        //.attr("rx", 15)
+        //.attr("fill-opacity", 0.3)
+        //.attr("stroke","black")
+        //.attr("fill", "lightgreen")
+
+  
+
     // redraw dots in new position
-    const dots = scatterBounds.selectAll("circle").data(dataset)
-    
-    dots
+    scatterBounds.selectAll("circle")
+        .data(dataset)
         .join("circle")
         .transition().duration(1000)
         .attr("cx", d => xScale(xAccessor(d)))
