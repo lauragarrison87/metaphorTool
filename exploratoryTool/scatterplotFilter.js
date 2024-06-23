@@ -36,8 +36,8 @@ const yAxisGenerator = d3.axisLeft()
 
 
 //to draw circles
-const xAccessor = d => (parseFloat(d.xfrom) + parseFloat(d.xto)) / 2 + 0.4 * Math.random() //hack to spread points a wee bit 
-const yAccessor = d => (parseFloat(d.yfrom) + parseFloat(d.yto)) / 2 + 0.4 * Math.random() //hack to spread points a wee bit that overlap exactly
+const xAccessor = d => (parseFloat(d.xfrom) + parseFloat(d.xto)) / 2 + 0.3 * Math.random() //hack to spread points a wee bit 
+const yAccessor = d => (parseFloat(d.yfrom) + parseFloat(d.yto)) / 2 + 0.3 * Math.random() //hack to spread points a wee bit that overlap exactly
 
 //to draw rects 
 const xfromAccessor = d => parseFloat(d.xfrom)
@@ -195,7 +195,7 @@ function onMouseEnter(e, datum) {
     imgPreview.attr("src", "./images/placeholder.png")
     imgPreview.attr("src", imgURL(datum))
     
-    this.parentNode.appendChild(this); //move hovered item to top
+    this.parentNode.appendChild(this) //move hovered item to top
 
     d3.select(this)
         .transition().ease(d3.easeLinear)
@@ -203,6 +203,14 @@ function onMouseEnter(e, datum) {
         .attr("fill", "black") // BRIGHT TURQ #5afaed
         .attr("opacity", 1)
         .attr("r", 10)
+    
+    hoveredRect = d3.selectAll("rect")
+        .filter(d => d==datum)
+
+    hoveredRect
+        .attr("opacity", 1)
+        .parentNode.appendChild(hoveredRect)
+
 
 }
 
@@ -215,6 +223,9 @@ function onMouseLeave() {
         .attr("fill", "gray")
         .attr("opacity", 0.5)
         .attr("r", 5)
+    
+    d3.selectAll(".scatterRects")
+        .attr("opacity", 0.2)
 
     //imgPreview.attr("src", "./images/placeholder.png")
 }
@@ -318,13 +329,14 @@ async function drawScatterPlot(dataset) {
     const sqs = scatterBounds.selectAll("rect").data(dataset)
     sqs
         .join("rect")
+        .attr("class", "scatterRects")
         .attr("x", d => xScale(xfromAccessor(d)))
         .attr("y", d => yScale(ytoAccessor(d)))
         .attr("width", d => xScale(xtoAccessor(d))-xScale(xfromAccessor(d)))
         .attr("height", d => yScale(yfromAccessor(d))-yScale(ytoAccessor(d)))
         //.attr("rx", 15)
-        .attr("fill-opacity", 0.3)
-        .attr("stroke","black")
+        .attr("opacity", 0.2)
+        //.attr("stroke","black")
         .attr("fill", "lightgreen")
 
 
@@ -373,12 +385,6 @@ async function updateScatterPlot(dataset) {
         .attr("y", d => yScale(ytoAccessor(d)))
         .attr("width", d => xScale(xtoAccessor(d))-xScale(xfromAccessor(d)))
         .attr("height", d => yScale(yfromAccessor(d))-yScale(ytoAccessor(d)))
-        //.attr("rx", 15)
-        //.attr("fill-opacity", 0.3)
-        //.attr("stroke","black")
-        //.attr("fill", "lightgreen")
-
-  
 
     // redraw dots in new position
     scatterBounds.selectAll("circle")

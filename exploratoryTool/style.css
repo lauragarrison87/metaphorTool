@@ -2,11 +2,13 @@ body {
     padding: 90px 30px 0px 30px; 
 }
 
-/* circle:hover {
+
+
+/* rect:hover {
     fill: #019488;
     stroke: #019488;
     stroke-width: 4px;
-} */
+}  */
 
 #img-container {
     max-height: 70%;
