@@ -179,7 +179,7 @@ function onMouseEnter(e, datum) {
     // Other image metadata to populate based on mouseHover:
     imgTitleTT.text(imgTitle(datum))
     imgAuthorTT.text(imgAuthor(datum))
-    srcURLTT.text(srcURL(datum))
+    srcURLTT.attr("href", srcURL(datum)).text(srcURL(datum))
     domainAccessorTT.text(domainAccessor(datum))
     secondDomainAccessorTT.text(secondaryDomainAccessor(datum))
 
