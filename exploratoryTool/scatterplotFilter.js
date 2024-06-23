@@ -40,10 +40,10 @@ const xAccessor = d => (parseFloat(d.xfrom) + parseFloat(d.xto)) / 2 + 0.3 * Mat
 const yAccessor = d => (parseFloat(d.yfrom) + parseFloat(d.yto)) / 2 + 0.3 * Math.random() //hack to spread points a wee bit that overlap exactly
 
 //to draw rects 
-const xfromAccessor = d => parseFloat(d.xfrom)
-const yfromAccessor = d => parseFloat(d.yfrom)
-const xtoAccessor = d => parseFloat(d.xto)
-const ytoAccessor = d => parseFloat(d.yto)
+const xfromAccessor = d => parseFloat(d.xfrom) + 0.05
+const yfromAccessor = d => parseFloat(d.yfrom) + 0.05
+const xtoAccessor = d => parseFloat(d.xto) - 0.05
+const ytoAccessor = d => parseFloat(d.yto) - 0.05
 
 // to draw text
 const imgTitle = d => d.name
@@ -202,14 +202,16 @@ function onMouseEnter(e, datum) {
         .duration(400)
         .attr("fill", "black") // BRIGHT TURQ #5afaed
         .attr("opacity", 1)
-        .attr("r", 10)
+        //.attr("r", 10)
+
+
     
     hoveredRect = d3.selectAll("rect")
         .filter(d => d==datum)
-
+    
     hoveredRect
         .attr("opacity", 1)
-        .parentNode.appendChild(hoveredRect)
+        .attr("fill", "black")
 
 
 }
@@ -226,6 +228,7 @@ function onMouseLeave() {
     
     d3.selectAll(".scatterRects")
         .attr("opacity", 0.2)
+        .attr("fill", "lightgray")
 
     //imgPreview.attr("src", "./images/placeholder.png")
 }
@@ -326,7 +329,8 @@ async function drawScatterPlot(dataset) {
         .text("TEMPORAL COVERAGE");
 
   
-    const sqs = scatterBounds.selectAll("rect").data(dataset)
+    const sqs = scatterBounds.selectAll("rect")
+        .data(dataset)
     sqs
         .join("rect")
         .attr("class", "scatterRects")
@@ -334,10 +338,9 @@ async function drawScatterPlot(dataset) {
         .attr("y", d => yScale(ytoAccessor(d)))
         .attr("width", d => xScale(xtoAccessor(d))-xScale(xfromAccessor(d)))
         .attr("height", d => yScale(yfromAccessor(d))-yScale(ytoAccessor(d)))
-        //.attr("rx", 15)
+        .attr("rx", 15)
         .attr("opacity", 0.2)
-        //.attr("stroke","black")
-        .attr("fill", "lightgreen")
+        .attr("fill", "lightgray")
 
 
     //create update selection to bind new data
