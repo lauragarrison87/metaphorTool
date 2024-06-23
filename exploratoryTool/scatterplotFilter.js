@@ -103,7 +103,8 @@ function domainTick(whichDomain) {
             "month",
             "year"
         ]
-        return [xTickStr, yTickStr]
+        let domainColor = "#009488"
+        return [xTickStr, yTickStr, domainColor]
 
     } else if (whichDomain == "Climate") {
         //const yTick = [10, 20, 30]
@@ -120,7 +121,8 @@ function domainTick(whichDomain) {
             "thousand",
             "" //HANNA check this 
         ]
-        return [xTickStr, yTickStr]
+        let domainColor = "#3ECCBF"
+        return [xTickStr, yTickStr, domainColor]
 
     } else if (whichDomain == "Space") {
         //const yTick = [10, 20, 30, 40, 50, 60]
@@ -139,7 +141,8 @@ function domainTick(whichDomain) {
             "million",
             "billion"
         ]
-        return [xTickStr, yTickStr]
+        let domainColor = "#7ACCC4"
+        return [xTickStr, yTickStr, domainColor]
 
     } else if (whichDomain == "Anthropology") {
         //const yTick = [10, 20, 30, 40, 50]
@@ -161,7 +164,8 @@ function domainTick(whichDomain) {
             "million",
             "billion"
         ]
-        return [xTickStr, yTickStr]
+        let domainColor = "#A7C7C4"
+        return [xTickStr, yTickStr, domainColor]
     }
 
 }
@@ -194,6 +198,9 @@ function onMouseEnter(e, datum) {
 
     imgPreview.attr("src", "./images/placeholder.png")
     imgPreview.attr("src", imgURL(datum))
+
+    let whichDomain = domainAccessor(datum)
+    console.log(whichDomain)
     
     this.parentNode.appendChild(this) //move hovered item to top
 
@@ -201,6 +208,7 @@ function onMouseEnter(e, datum) {
         .transition().ease(d3.easeLinear)
         .duration(400)
         .attr("fill", "black") // BRIGHT TURQ #5afaed
+        .attr("fill", domainTick(whichDomain)[2])
         .attr("opacity", 1)
         //.attr("r", 10)
 
@@ -211,24 +219,29 @@ function onMouseEnter(e, datum) {
     
     hoveredRect
         .attr("opacity", 1)
-        .attr("fill", "black")
+        //.attr("fill", "black")
+        .attr("fill", domainTick(whichDomain)[2])
 
 
 }
 
-function onMouseLeave() {
+function onMouseLeave(e, datum) {
+    let whichDomain = domainAccessor(datum)
+
     tooltip.style("opacity", 0)
 
     d3.select(this)
         .transition().ease(d3.easeLinear)
         .duration(400)
-        .attr("fill", "gray")
+        //.attr("fill", "gray")
+        .attr("fill", domainTick(whichDomain)[2])
         .attr("opacity", 0.5)
         .attr("r", 5)
     
     d3.selectAll(".scatterRects")
         .attr("opacity", 0.2)
-        .attr("fill", "lightgray")
+        //.attr("fill", "lightgray")
+        .attr("fill", domainTick(whichDomain)[2])
 
     //imgPreview.attr("src", "./images/placeholder.png")
 }
@@ -328,7 +341,9 @@ async function drawScatterPlot(dataset) {
         .attr("y", dimensions.boundedHeight + 55)
         .text("TEMPORAL COVERAGE");
 
-  
+    let whichDomain = domainAccessor(dataset[0])
+    console.log(domainTick(whichDomain)[2])
+    
     const sqs = scatterBounds.selectAll("rect")
         .data(dataset)
     sqs
@@ -340,7 +355,8 @@ async function drawScatterPlot(dataset) {
         .attr("height", d => yScale(yfromAccessor(d))-yScale(ytoAccessor(d)))
         .attr("rx", 15)
         .attr("opacity", 0.2)
-        .attr("fill", "lightgray")
+        //.attr("fill", "lightgray") //domainTick(whichDomain)[2])
+        .attr("fill", domainTick(whichDomain)[2])
 
 
     //create update selection to bind new data
@@ -352,7 +368,8 @@ async function drawScatterPlot(dataset) {
         .transition().duration(750)
         .attr("cx", d => xScale(xAccessor(d)))
         .attr("cy", d => yScale(yAccessor(d)))
-        .attr("fill", "gray") //teal color rgb(1, 148, 136)
+        //.attr("fill", "gray") 
+        .attr("fill", domainTick(whichDomain)[2])
         .attr("opacity", 0.5)
         .attr("r", 5)
 
@@ -372,6 +389,8 @@ async function updateScatterPlot(dataset) {
     //const dataset= await d3.csv(dataCSV)
     console.log("this is my new data")
     console.table(dataset[1])
+    let whichDomain = domainAccessor(dataset[0])
+    console.log(domainTick(whichDomain)[2])
 
     const scatterBounds = d3.select("#scatter-bounds")
 
@@ -388,6 +407,7 @@ async function updateScatterPlot(dataset) {
         .attr("y", d => yScale(ytoAccessor(d)))
         .attr("width", d => xScale(xtoAccessor(d))-xScale(xfromAccessor(d)))
         .attr("height", d => yScale(yfromAccessor(d))-yScale(ytoAccessor(d)))
+        .attr("fill", domainTick(whichDomain)[2])
 
     // redraw dots in new position
     scatterBounds.selectAll("circle")
@@ -396,6 +416,7 @@ async function updateScatterPlot(dataset) {
         .transition().duration(1000)
         .attr("cx", d => xScale(xAccessor(d)))
         .attr("cy", d => yScale(yAccessor(d)))
+        .attr("fill", domainTick(whichDomain)[2])
 
 }
 
