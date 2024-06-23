@@ -67,7 +67,7 @@ const ontologicalAccessor = d => d.ontological_details
 const orientationalAccessor = d => d.orientational_details
 const imagisticAccessor = d => d.imagistic_details
 const textGraphicMetaphorAcc = d => d.text_support_graphical_metaphors
-const textGraphicMetaphorDetailsAcc = d => d.text_support_graphical_metaphor_details
+const textGraphicMetaphorDetailsAcc = d => d.type_text_graphical_metaphor
 
 const structTT = d3.select("#structural-details")
 const ontoTT =  d3.select("#ontological-details")
