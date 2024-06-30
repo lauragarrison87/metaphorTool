@@ -1,8 +1,9 @@
 # Visual Conceptual Metaphor Explorer 
 This tool allows the exploration of deconstructed infographics and categorized visual and conceptual metaphors in support of our work, The Language of Infographics: Toward Understanding Conceptual Metaphor Use in Scientific Storytelling  
 
-This tool can be viewed online by following tis link http://127.0.0.1:5500/exploratoryTool/index.html
+This tool can be viewed online by following this link: http://127.0.0.1:5500/exploratoryTool/index.html
 
+This tool is also available on the GitHub repository: https://github.com/lauragarrison87/metaphorTool
 
 ## Getting started 
 1. `cd metaphorTool/exploratoryTool`
