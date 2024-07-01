@@ -1,9 +1,9 @@
 # Visual Conceptual Metaphor Explorer 
-This tool allows the exploration of deconstructed infographics and categorized visual and conceptual metaphors in support of our work, The Language of Infographics: Toward Understanding Conceptual Metaphor Use in Scientific Storytelling  
+This tool allows the exploration of deconstructed infographics and categorized visual and conceptual metaphors in support of our work, *The Language of Infographics: Toward Understanding Conceptual Metaphor Use in Scientific Storytelling* (currently under review to IEEE VIS 2024).  
 
-This tool can be viewed online by following this link: http://127.0.0.1:5500/exploratoryTool/index.html
+This tool can be viewed online by following this link: https://lauragarrison87.github.io/metaphorTool/exploratoryTool/
 
-This tool is also available on the GitHub repository: https://github.com/lauragarrison87/metaphorTool
+Its corresponding GitHub repository location is: https://github.com/lauragarrison87/metaphorTool
 
 ## Getting started 
 1. `cd metaphorTool/exploratoryTool`
@@ -16,10 +16,8 @@ Use the top navigation menu (Biomedicine, Climate, Space, Anthropology) to explo
 
 A spatiotemporal graph is placed on the left side (Infographic Spatio-Temporal Distribution section) and displays points that represent individual infographics (x axis= temporal coverage of infographic, y axis= spatial coverage of infographic). Some infographics (in biomedical, climate, space, and anthropology domains) span across several spatial scales, which are represented by beveled rectangles. Please note that the middle and right section will remain empty until a point (infographic) is chosen by hovering above it. 
 
-Above the graph, Primary domain is stated once a point is selected (alongside the Secondary domain(s), if applicable).
+Once a desired infographic is chosen by hovering over a point in the spatio-temporal distribution plot, Image Details section will appear in the middle including the embedded infographic, with image name, image author(s), and the domain(s) to which the infographic belongs. A source URL link appears below the infographics image. Due to copyright reasons, some infographics could not be embedded. Please follow the URL link provided to reach the original source location for the infographic. 
 
-Once a desired point (infographic) is chosen by hovering over it, Image Details section will appear in the middle including the embedded infographic, with image name, image author(s), and the domain distribution above the infographic image. A source URL link appears below the infographics image. Due to copyright reasons, some infographics could not be embedded. Please follow the URL link provided to reach the original source site. 
-
-On the right side (Conceptual Metaphor Analysis section) the chosen infographics is visually analyzed with a bar chart showing the number of visual conceptual metaphors used. The text below identifies describes the different types of metaphors identified in the infographic, including whether a textual metaphor is present and what type. 
+On the right side of the interface (Conceptual Metaphor Analysis section), the chosen infographic is visually analyzed with a bar chart showing the number of visual conceptual metaphors used. The text below identifies describes the different types of metaphors identified in the infographic, including whether a textual metaphor is present and what type. 
 
 
