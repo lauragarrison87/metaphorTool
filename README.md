@@ -20,4 +20,9 @@ Once a desired infographic is chosen by hovering over a point in the spatio-temp
 
 On the right side of the interface (Conceptual Metaphor Analysis section), the chosen infographic is visually analyzed with a bar chart showing the number of visual conceptual metaphors used. The text below identifies describes the different types of metaphors identified in the infographic, including whether a textual metaphor is present and what type. 
 
+To reproduce the sample image below, navigate to navigation menu at the top of the page and chose the 'Biomedicine' category. Navigate to the scatter plot on the left and hover over a plotpoint at the bottom of the distribution plot located between the 'day' and 'week' on the temporal (x) axis, and 'molecules' on the spatal (y) axis. Once you reach the point, the middle part revelas the image of the infographycs and its details and the right side displays the incidence and analysis of individual visual metaphors.
+
+<img width="1143" alt="Stamp_IMG_Github" src="https://github.com/user-attachments/assets/16587105-6785-4239-bbe3-c1e36329decf">
+
+
 
