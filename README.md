@@ -1,5 +1,5 @@
 # Visual Conceptual Metaphor Explorer 
-This tool allows the exploration of deconstructed infographics and categorized visual and conceptual metaphors in support of our work, *The Language of Infographics: Toward Understanding Conceptual Metaphor Use in Scientific Storytelling* (currently under review to IEEE VIS 2024).  
+This tool allows the exploration of deconstructed infographics and categorized visual and conceptual metaphors in support of our work, *The Language of Infographics: Toward Understanding Conceptual Metaphor Use in Scientific Storytelling* (H. Pokojná, T. Isenberg, S. Bruckner, B. Kozlíková, and L. Garrison, "The Language of Infographics: Toward Understanding Conceptual Metaphor Use in Scientific Storytelling," IEEE Transactions on Visualization and Computer Graphics, 2024.).  
 
 This tool can be viewed online by following this link: https://lauragarrison87.github.io/metaphorTool/exploratoryTool/
 
